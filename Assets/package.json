@@ -1,0 +1,16 @@
+
+{
+  "name": "com.xkz.unitytools",
+  "version": "1.0.0",
+  "displayName": "GsArraytool",
+  "description": "Array Tool",
+  "unity": "2022",
+  "keywords": [
+    "unity",
+    "Array"
+    ],
+  "author": {
+    "name": "XTools",
+    "url": "https://www.unity3d.com"
+  }
+}
