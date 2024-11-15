@@ -1,0 +1,16 @@
+{
+    "name": "YaoGuai.XTools.Tests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:34a30b25c7d353b4fa203ccd2613041e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

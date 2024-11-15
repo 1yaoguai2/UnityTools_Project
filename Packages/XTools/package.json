@@ -1,0 +1,11 @@
+{
+    "name": "com.yaoguai.xtools",
+    "version": "0.0.1",
+    "displayName": "XTools",
+    "description": "This is Unity Tools!",
+    "author": {
+        "name": "xkz",
+        "email": "171802082@qq.com",
+        "url": "https://1yaoguai2.github.io/PersonalWeb_Project/"
+    }
+}

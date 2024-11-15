@@ -15,7 +15,7 @@ namespace XTools.EditorTools
     /// </summary>
     public class Order : MonoBehaviour
     {
-        [MenuItem("Tools/排序子物体")]
+        [MenuItem("Tools/排序物体")]
         public static void OrderChild()
         {
             try
@@ -33,9 +33,11 @@ namespace XTools.EditorTools
                         childs[i] = selectObjs[0].transform.GetChild(i);
                     }
 
+                    int index = GetNumIndex(childs[0].name);
+                    //纯数字排序
                     //var newChilds = childs.OrderBy(t => int.Parse(t.name)).ToList();
-                    //排除字母留下编号
-                    var newChilds = childs.OrderBy(t => int.Parse(t.name.Substring(1))).ToList();
+                    //排除字母留下编号排序
+                    var newChilds = childs.OrderBy(t => int.Parse(t.name.Substring(index,t.name.Length -index))).ToList();
                     List<string> orderStr = new List<string>();
                     for (int j = 0; j < newChilds.Count; j++)
                     {
@@ -62,9 +64,18 @@ namespace XTools.EditorTools
                 }
                 else
                 {
-                    var newSelectObjs = selectObjs.OrderBy(t => int.Parse(t.name)).ToList();
+                    List<string> orderStr = new List<string>();
+                    int index = GetNumIndex(selectObjs[0].name);
+                    var newSelectObjs = selectObjs.OrderBy(t => int.Parse(t.name.Substring(index,t.name.Length-index)))
+                        .ToList();
                     for (int k = 0; k < newSelectObjs.Count; k++)
                     {
+                        string childName = newSelectObjs[k].name;
+                        Debug.Log(childName);
+                        if (orderStr.Contains(childName))
+                            Debug.LogError("重复的子物体：" + childName);
+                        else
+                            orderStr.Add(childName);
                         newSelectObjs[k].transform.SetSiblingIndex(k);
                     }
                 }
@@ -73,6 +84,28 @@ namespace XTools.EditorTools
             {
                 Debug.LogError("排序出错：" + e.Message);
             }
+        }
+
+        /// <summary>
+        /// 名称靠前的字母个数
+        /// 排除字母的影响,要求所有名字中字母长度一致
+        /// </summary>
+        /// <param name="nameStr"></param>
+        /// <returns></returns>
+        public static int GetNumIndex(string nameStr)
+        {
+            int index = 0;
+            for (int i = 0; i < nameStr.Length; i++)
+            {
+                string inStr = nameStr.Substring(i, 1);
+                if(int.TryParse(inStr,out int num))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
         }
     }
 }
