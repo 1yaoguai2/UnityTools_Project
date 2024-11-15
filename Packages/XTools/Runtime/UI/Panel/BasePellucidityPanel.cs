@@ -95,6 +95,7 @@ namespace XTools.UI
 
             _canvasGroup.alpha = 1;
             isShow = true;
+            openEvent?.Invoke();
             _lock = false;
         }
 
@@ -116,6 +117,7 @@ namespace XTools.UI
             _canvasGroup.alpha = 0;
             ChildTransform.localScale = Vector3.zero;
             isShow = false;
+            closeEvent?.Invoke();
             _lock = false;
         }
     }

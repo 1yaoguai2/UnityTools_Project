@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace XTools.UI
@@ -15,7 +16,14 @@ namespace XTools.UI
         protected new string name;
 
         public PanelType panelType = PanelType.BasePanel;
-        
+        /// <summary>
+        /// ！在窗口创建成功时绑定对应方法
+        /// </summary>
+        public Action openEvent;
+        /// <summary>
+        /// ！在窗口删除时移除所有方法
+        /// </summary>
+        public Action closeEvent;
 
         //打开窗口
         public virtual void OpenPanel(string nameStr)
@@ -23,6 +31,7 @@ namespace XTools.UI
             this.name = nameStr;
             gameObject.SetActive(true);
             isShow = true;
+            openEvent?.Invoke();
         }
 
         //关闭窗口
@@ -30,6 +39,7 @@ namespace XTools.UI
         {
             isShow = false;
             gameObject.SetActive(false);
+            closeEvent?.Invoke();
             Destroy(gameObject);
 
             if (UIManager.Instance.panelDic.ContainsKey(name))

@@ -76,6 +76,7 @@ namespace XTools.UI
 
             ChildTransform.localScale = Vector3.one;
             isShow = true;
+            openEvent?.Invoke();
             _lock = false;
         }
 
@@ -95,6 +96,7 @@ namespace XTools.UI
             }
             ChildTransform.localScale = Vector3.zero;
             isShow = false;
+            closeEvent?.Invoke();
             _lock = false;
         }
     }
