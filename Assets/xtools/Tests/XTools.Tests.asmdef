@@ -1,8 +1,9 @@
 {
-    "name": "YaoGuai.XTools.Tests",
+    "name": "XTools.Tests",
     "rootNamespace": "",
     "references": [
-        "GUID:34a30b25c7d353b4fa203ccd2613041e"
+        "GUID:d9a318223d031704c9c4aa9ac184f40d",
+        "GUID:633d6c08fcd060b4ea469a8d109ea5f5"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

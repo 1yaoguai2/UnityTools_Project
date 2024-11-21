@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XTools.UI;
+
 /// <summary>
 /// 动态UI框架使用示例
 /// </summary>
