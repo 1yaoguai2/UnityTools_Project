@@ -6,11 +6,11 @@ public class TestLog : MonoBehaviour
 {
     void Start()
     {
-        LogManager.Log("¿ªÊ¼ÓÎÏ·");
+        LogManager.Log("å¼€å§‹æ¸¸æˆ");
     }
 
     void Update()
     {
-        LogManager.LogError("ÓÎÏ·¹ÊÕÏ");
+        LogManager.LogError("æ¸¸æˆæ•…éšœ");
     }
 }
