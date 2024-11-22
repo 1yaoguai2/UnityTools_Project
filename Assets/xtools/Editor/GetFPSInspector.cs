@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
 
 [CustomEditor(typeof(GetFPS))]
 public class GetFPSInspector : Editor
@@ -35,3 +33,4 @@ public class GetFPSInspector : Editor
     }
 
 }
+#endif

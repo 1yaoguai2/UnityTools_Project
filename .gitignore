@@ -71,4 +71,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 /Assets/StreamingAssets/Log
+app
+App
 
