@@ -12,15 +12,20 @@ namespace XTools.UI
     {
         //是否显示
         public bool isShow = false;
+
         //名称
         protected new string name;
 
         public PanelType panelType = PanelType.BasePanel;
+
         /// <summary>
         /// ！在窗口创建成功时绑定对应方法
+        /// ！在窗口删除时移除所有方法
         /// </summary>
         public Action openEvent;
+
         /// <summary>
+        /// ！在窗口创建成功时绑定对应方法
         /// ！在窗口删除时移除所有方法
         /// </summary>
         public Action closeEvent;
@@ -40,6 +45,8 @@ namespace XTools.UI
             isShow = false;
             gameObject.SetActive(false);
             closeEvent?.Invoke();
+            openEvent = null;
+            closeEvent = null;
             Destroy(gameObject);
 
             if (UIManager.Instance.panelDic.ContainsKey(name))
