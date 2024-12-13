@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: 
+  icon: {fileID: 10904, guid: 0000000000000000f000000000000000, type: 0}
+  title: "unity\u5DE5\u5177\u5305XTools"
+  sections:
+  - heading: "xtools\u6587\u4EF6\u5939"
+    text: "\u5305\u542B\u4E86unity\u9879\u76EE\u57FA\u7840\u5E38\u7528\u4EE3\u7801\uFF0C\u53EF\u4EE5\u4F7F\u7528unity\u7684PackageManager\u5305\u901A\u8FC7URL\u5BFC\u5165"
+    linkText: "Git\u5730\u5740"
+    url: https://github.com/1yaoguai2/UnityTools_Project.git
+  - heading: "Package\u6587\u4EF6\u5939"
+    text: "\u5305\u542B\u4E86unity\u9879\u76EE\u57FA\u7840\u5E38\u7528\u4EE3\u7801\u7684\u5BFC\u51FA\u5305"
+    linkText: "\u53EF\u4EE5\u5BFC\u5165unity\u9879\u76EE\u4F7F\u7528\u548C\u7F16\u8F91\u4FEE\u6539"
+    url: 
+  - heading: "\u6CE8\u610F\u4E8B\u9879"
+    text: "1.\u8BE5\u5305\u4F7F\u7528Unity2022.2.20\u5F00\u53D1\uFF0C\u7406\u8BBA\u4E0A\u652F\u6301\u6240\u6709unity\u7248\u672C"
+    linkText: 
+    url: 
+  computerID: 12321
