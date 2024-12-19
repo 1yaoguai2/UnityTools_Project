@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using System.IO;
 using System.Reflection;
+using Unity.VisualScripting;
 
 [CustomEditor(typeof(Readme))]
 [InitializeOnLoad]
@@ -83,7 +84,6 @@ public class ReadmeEditor : Editor
         var path = Path.Combine(Directory.GetCurrentDirectory(), assetPath);
         s_SaveWindowLayoutMethod.Invoke(null, new object[] { path });
         Debug.Log($"当前布局保存到{assetPath}成功！");
-
     }
 
     /// <summary>
@@ -92,6 +92,9 @@ public class ReadmeEditor : Editor
     [MenuItem("Tutorial/Load Window Layout")]
     public static void LoadLayoutFromAsset()
     {
+#if UNITY_2023_1_OR_NEWER
+        LoadLayoutFromAsset6();
+#else
         if (s_LoadWindowLayoutMethod == null)
             return;
         if (!File.Exists(assetPath))
@@ -103,7 +106,31 @@ public class ReadmeEditor : Editor
 
         var path = Path.Combine(Directory.GetCurrentDirectory(), assetPath);
         s_LoadWindowLayoutMethod.Invoke(null, new object[] { path, false });
+        Debug.Log($"加载布局文件{assetPath}成功！");
+#endif
     }
+
+    /// <summary>
+    /// unity6.0版本专用
+    /// </summary>
+    private static void LoadLayoutFromAsset6()
+    {
+        try
+        {
+            if (!File.Exists(assetPath))
+            {
+                 new Exception($"6.0版本，加载布局文件出错：找不到{assetPath}文件");
+            }
+            //EditorWindowLayout.LoadLayout(assetPath);
+            Debug.Log($"加载布局文件{assetPath}成功！");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"6.0版本加载布局文件出错：{e.Message}");
+        }
+    }
+
+
 
     /// <summary>
     /// 选中Readme资产
