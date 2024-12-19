@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 public class LogManager
@@ -26,40 +27,54 @@ public class LogManager
     //第一次执行打印log
     private static bool FirstLogTag = true;
 
+    public static StringBuilder logStr = new StringBuilder();
+    public static StringBuilder warningStr = new StringBuilder();
+    public static StringBuilder errorStr = new StringBuilder();
     public static void Init()
     {
         Application.logMessageReceived += OnLogByUnity;
+        logStr.Append("[I]");
+        warningStr.Append("[W]");
+        errorStr.Append("[E]");
     }
 
     #region 日志
 
     public static void Log(object message, bool recordStackTrace = false)
     {
-        string str = "[I]" + GetLogTime() + message;
-        AddListLogs(str);
+        //string logStr = "[I]" + GetLogTime() + message;
+        logStr.Append(GetLogTime());
+        logStr.Append(message);
+        AddListLogs(logStr.ToString());
         if (!EnableLog)
             return;
 #if UNITY_EDITOR
-        Debug.Log(Prefix + str, null);
+        Debug.Log(Prefix + logStr, null);
 #endif
-        LogToFile(str, recordStackTrace);
+        LogToFile(logStr.ToString(), recordStackTrace);
+        logStr.Length = 3;
     }
 
     public static void LogWarning(object message)
     {
-        string str = "[W]" + GetLogTime() + message;
-        AddListLogs(str);
+        //string warningStr = "[W]" + GetLogTime() + message;
+        warningStr.Append(GetLogTime());
+        warningStr.Append(message);
+        AddListLogs(warningStr.ToString());
 #if UNITY_EDITOR
-        Debug.LogWarning(string.Format(WarningColor, Prefix + str), null);
+        Debug.LogWarning(string.Format(WarningColor, Prefix + warningStr), null);
 #endif
-        LogToFile(str, true);
+        LogToFile(warningStr.ToString(), true);
+        warningStr.Length = 3;
     }
 
     public static void LogError(object message)
     {
-        string str = "[E]" + GetLogTime() + message;
+        //string errorStr = "[E]" + GetLogTime() + message;
+        errorStr.Append(GetLogTime());
+        errorStr.Append(message);
 #if UNITY_EDITOR
-        Debug.LogError(string.Format(ErrorColor, Prefix + str), null);
+        Debug.LogError(string.Format(ErrorColor, Prefix + errorStr), null);
 #endif
         if (!EnableLog)
         {
@@ -67,10 +82,11 @@ public class LogManager
         }
         else
         {
-            AddListLogs(str);
+            AddListLogs(errorStr.ToString());
         }
 
-        LogToFile(str, true);
+        LogToFile(errorStr.ToString(), true);
+        errorStr.Length = 3;
     }
 
     /// <summary>
@@ -150,7 +166,7 @@ public class LogManager
             OutputListLogs(LogFileWriter); // 忽略Info时报错，自动将日志记录到文件中方便回溯
         else
             AddListLogs(str);
-        LogToFile(str);
+        //LogToFile(str);
     }
 
     private static void AddListLogs(string str)
