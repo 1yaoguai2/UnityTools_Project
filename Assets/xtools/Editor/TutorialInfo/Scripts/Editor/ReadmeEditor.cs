@@ -3,7 +3,7 @@ using UnityEditor;
 using System;
 using System.IO;
 using System.Reflection;
-using Unity.VisualScripting;
+using Debug = UnityEngine.Debug;
 
 [CustomEditor(typeof(Readme))]
 [InitializeOnLoad]
