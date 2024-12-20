@@ -5,172 +5,118 @@ using System.Text;
 using System.IO;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+using System.Collections.Generic;
+using System.Threading;
 
 /// <summary>
 /// 自定义日志工具类，提供日志记录和文件管理功能
 /// </summary>
 public static class CustomLogger
 {
-    // 基础配置常量和字段
     private const int BUFFER_SIZE = 256;  // StringBuilder的初始和重置容量
-    private static readonly StringBuilder StringBuilder = new StringBuilder(BUFFER_SIZE);
+    private const int INITIAL_QUEUE_CAPACITY = 1000;  // 队列初始容量
+    private const int MAX_QUEUE_SIZE = 10000;  // 队列最大容量，防止内存溢出
+
+    private static readonly StringBuilder s_StringBuilder = new StringBuilder(BUFFER_SIZE);
     private static string LogFilePath;    // 当前日志文件路径
     private static readonly object LogLock = new object();  // 线程同步锁
-    private static bool IsInitialized;    // 日志系统初始化标志
     private static readonly string LogDirectory = Path.Combine(Application.streamingAssetsPath, "Logs");
-    private static DateTime LastInitTime;  // 上次初始化时间
-    private static readonly TimeSpan InitInterval = TimeSpan.FromHours(1);  // 日志文件更新间隔
+    private static Queue<string> LogQueue = new Queue<string>(INITIAL_QUEUE_CAPACITY);
+    private static string timestamp;
+    private static string logMessage;
+
+    //电脑参数
+    private static string deviceModel;
+    private static string operatingSystem;
+    private static string version;
 
     /// <summary>
-    /// 重置StringBuilder的状态和容量
+    /// 重置StringBuilder的状态和容量为初始值
     /// </summary>
     private static void ResetStringBuilder()
     {
-        StringBuilder.Clear();
-        StringBuilder.Capacity = BUFFER_SIZE;
+        s_StringBuilder.Clear();
+        s_StringBuilder.Capacity = BUFFER_SIZE;
     }
 
     /// <summary>
-    /// 初始化或更新日志系统
+    /// 在应用启动时初始化系统信息并注册退出事件
     /// </summary>
-    /// <remarks>
-    /// - 创建日志目录和文件
-    /// - 每小时创建新的日志文件
-    /// - 写入系统信息头
-    /// </remarks>
-    private static void InitializeLogger()
+    [RuntimeInitializeOnLoadMethod]
+    private static void RegisterQuitHandler()
     {
-        if (IsInitialized)
+        GetComputerInfo();
+        Application.quitting += () =>
         {
-            // 检查是否需要创建新的日志文件（每小时）
-            var now = DateTime.Now;
-            if (now - LastInitTime < InitInterval) return;
+            Log("Game Exit!");
+            FlushLogsToFile(LogQueue);
+        };
+    }
 
-            LastInitTime = now;
-        }
+    /// <summary>
+    /// 缓存当前设备和系统信息
+    /// </summary>
+    private static void GetComputerInfo()
+    {
+        deviceModel = SystemInfo.deviceModel;
+        operatingSystem = SystemInfo.operatingSystem;
+        version = Application.version;
+    }
 
+    /// <summary>
+    /// 获取当前调用的文件名和行号
+    /// </summary>
+    private static (string fileName, int lineNumber) GetStackTraceInfo()
+    {
         try
         {
-            // 确保日志目录存在
-            if (!Directory.Exists(LogDirectory))
+            var stackTrace = new StackTrace(true);
+            // 遍历堆栈帧查找第一个非日志类的调用
+            for (int i = 0; i < stackTrace.FrameCount; i++)
             {
-                Directory.CreateDirectory(LogDirectory);
+                var frame = stackTrace.GetFrame(i);
+                if (frame == null) continue;
+
+                var method = frame.GetMethod();
+                if (method == null || method.DeclaringType == null) continue;
+
+                // 跳过日志类自身的方法
+                if (method.DeclaringType == typeof(CustomLogger)) continue;
+
+                return (frame.GetFileName() ?? "Unknown", frame.GetFileLineNumber());
             }
-
-            // 创建日志文件名（包含日期和小时）
-            var now = DateTime.Now;
-            string fileName = $"game_log_{now:yyyy-MM-dd_HH}h.txt";
-            string newLogPath = Path.Combine(LogDirectory, fileName);
-
-            // 如果是同一个文件，不需要重新初始化
-            if (newLogPath.Equals(LogFilePath)) return;
-
-            LogFilePath = newLogPath;
-
-            // 使用StringBuilder构建header以减少字符串连接
-            StringBuilder.Clear();
-            StringBuilder
-                .AppendLine()
-                .Append("=== Log Start at ").Append(now.ToString("yyyy-MM-dd HH:mm:ss")).AppendLine(" ===")
-                .Append("Device: ").AppendLine(SystemInfo.deviceModel)
-                .Append("OS: ").AppendLine(SystemInfo.operatingSystem)
-                .Append("Game Version: ").AppendLine(Application.version)
-                .AppendLine("=====================================")
-                .AppendLine();
-
-            // 使用追加模式写入header
-            using (var fileStream = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
-            using (var streamWriter = new StreamWriter(fileStream))
-            {
-                streamWriter.Write(StringBuilder.ToString());
-            }
-
-            IsInitialized = true;
-            LastInitTime = now;
         }
-        catch (Exception e)
+        catch
         {
-            Debug.LogError($"Failed to initialize logger: {e.Message}");
+            // 如果获取堆栈信息失败，返回默认值
         }
-        finally
-        {
-            ResetStringBuilder();
-        }
+
+        return ("Unknown", 0);
     }
 
     /// <summary>
-    /// 将日志消息写入文件
+    /// 记录日志信息
     /// </summary>
-    /// <param name="message">日志消息内容</param>
-    /// <param name="logType">日志类型（Error/Warning/Log）</param>
-    /// <remarks>
-    /// 使用线程锁确保线程安全的文件写入
-    /// </remarks>
-    private static void WriteToFile(string message, LogType logType)
-    {
-        if (string.IsNullOrEmpty(LogFilePath)) return;
-
-        try
-        {
-            lock (LogLock)
-            {
-                // 检查是否需要创建新的日志文件
-                InitializeLogger();
-
-                // 直接写入消息，因为消息已经包含了时间戳和日志类型
-                using (var fileStream = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
-                using (var streamWriter = new StreamWriter(fileStream))
-                {
-                    streamWriter.WriteLine(message);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to write to log file: {e.Message}");
-        }
-    }
-
-    /// <summary>
-    /// 记录带上下文的日志信息
-    /// </summary>
-    /// <param name="message">日志消息</param>
-    /// <param name="context">Unity对象上下文，通常是MonoBehaviour实例</param>
+    /// <param name="message">日志内容</param>
+    /// <param name="context">Unity对象上下文</param>
     /// <param name="logType">日志类型</param>
-    /// <remarks>
-    /// 同时在Console窗口显示并写入日志文件
-    /// </remarks>
     public static void LogWithContext(string message, Object context = null, LogType logType = LogType.Log)
     {
-        // 确保日志文件初始化
-        if (!IsInitialized)
-        {
-            InitializeLogger();
-        }
-
         try
         {
-            ResetStringBuilder();
-
-            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            string stackTraceInfo = string.Empty;
+            timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            var (fileName, lineNumber) = GetStackTraceInfo();
 
 #if UNITY_EDITOR
-            // 在编辑器模式下获取堆栈信息
-            var stackTrace = new StackTrace(true);
-            var frame = stackTrace.GetFrame(1);
-            var fileName = frame.GetFileName();
-            var lineNumber = frame.GetFileLineNumber();
 
-            StringBuilder
+            s_StringBuilder
                 .Append('[').Append(timestamp).Append("] ")
                 .Append(message).Append('\n')
                 .Append("File: ").Append(fileName).Append('\n')
                 .Append("Line: ").Append(lineNumber);
 
-            string fullMessage = StringBuilder.ToString();
+            string fullMessage = s_StringBuilder.ToString();
 
-            // 在Console窗口显示
             switch (logType)
             {
                 case LogType.Error:
@@ -183,20 +129,36 @@ public static class CustomLogger
                     Debug.Log(fullMessage, context);
                     break;
             }
-
-            // 为文件日志添加堆栈信息
-            stackTraceInfo = $"\nFile: {fileName}\nLine: {lineNumber}";
-#endif
-
-            // 构建日志文件消息
+            //#else
             ResetStringBuilder();
-            StringBuilder
-                .Append('[').Append(timestamp).Append(']')
-                .Append('[').Append(logType.ToString().ToUpper()).Append("] ")
-                .Append(message)
-                .Append(stackTraceInfo); // 添加堆栈信息（如果在编辑器模式下）
 
-            WriteToFile(StringBuilder.ToString(), logType);
+            s_StringBuilder
+                .Append('[').Append(timestamp).Append(']')
+                .Append('[').Append(logType.ToString().ToUpper()).Append(']')
+                .Append(message).Append('\n')
+                .Append("File: ").Append(fileName).Append('\n')
+                .Append("Line: ").Append(lineNumber);
+
+            logMessage = s_StringBuilder.ToString();
+
+
+            lock (LogLock)
+            {
+                // 检查队列大小
+                if (LogQueue.Count >= MAX_QUEUE_SIZE)
+                {
+                    var oldQueue = LogQueue;
+                    LogQueue = new Queue<string>(INITIAL_QUEUE_CAPACITY);
+
+                    var warningMsg = $"[{DateTime.Now:HH:mm:ss.fff}][WARNING] Log queue exceeded limit, older logs were save and cleared";
+                    oldQueue.Enqueue(warningMsg);
+
+                    QueueLogsToSave(oldQueue);
+                }
+
+                LogQueue.Enqueue(logMessage);
+            }
+#endif
         }
         catch (Exception e)
         {
@@ -209,73 +171,93 @@ public static class CustomLogger
     }
 
     /// <summary>
-    /// 清理指定天数之前的日志文件
+    /// 记录错误日志
     /// </summary>
-    /// <param name="daysToKeep">要保留的天数，默认7天</param>
-    /// <remarks>
-    /// 根据文件创建时间删除过期的日志文件
-    /// </remarks>
-    public static void CleanOldLogs(int daysToKeep = 7)
-    {
-        try
-        {
-            string logDirectory = Path.Combine(Application.persistentDataPath, "Logs");
-            if (!Directory.Exists(logDirectory)) return;
-
-            var directory = new DirectoryInfo(logDirectory);
-            var files = directory.GetFiles("game_log_*.txt");
-            var cutoffDate = DateTime.Now.AddDays(-daysToKeep);
-
-            foreach (var file in files)
-            {
-                if (file.CreationTime < cutoffDate)
-                {
-                    file.Delete();
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to clean old logs: {e.Message}");
-        }
-    }
-
-    /// <summary>
-    /// 获取当前日志文件的完整路径
-    /// </summary>
-    /// <returns>日志文件路径</returns>
-    public static string GetCurrentLogPath()
-    {
-        return LogFilePath;
-    }
-
-    /// <summary>
-    /// 记录错误级别的日志（仅在编辑器模式可用）
-    /// </summary>
-    /// <param name="message">错误消息</param>
-    /// <param name="context">相关的Unity对象</param>
     public static void LogError(string message, Object context = null)
     {
         LogWithContext(message, context, LogType.Error);
     }
 
     /// <summary>
-    /// 记录警告级别的日志（仅在编辑器模式可用）
+    /// 记录警告日志
     /// </summary>
-    /// <param name="message">警告消息</param>
-    /// <param name="context">相关的Unity对象</param>
     public static void LogWarning(string message, Object context = null)
     {
         LogWithContext(message, context, LogType.Warning);
     }
 
     /// <summary>
-    /// 记录普通信息级别的日志（仅在编辑器模式可用）
+    /// 记录普通日志
     /// </summary>
-    /// <param name="message">日志消息</param>
-    /// <param name="context">相关的Unity对象</param>
     public static void Log(string message, Object context = null)
     {
         LogWithContext(message, context, LogType.Log);
     }
+
+    /// <summary>
+    /// 将日志队列写入文件并清空队列
+    /// </summary>
+    private static void FlushLogsToFile(Queue<string> overflowQueue)
+    {
+        try
+        {
+            if (overflowQueue.Count > 0)
+            {
+                try
+                {
+                    var now = DateTime.Now;
+                    var infoStringBuilder = new StringBuilder();
+                    Directory.CreateDirectory(LogDirectory);
+                    LogFilePath = Path.Combine(LogDirectory, $"log_{now:yyyy-MM-dd_HH}.txt");
+
+                    infoStringBuilder
+                        .AppendLine()
+                        .Append("=== Log Start at ").Append(now.ToString("yyyy-MM-dd HH:mm:ss")).AppendLine(" ===")
+                        .Append("Device: ").AppendLine(deviceModel)
+                        .Append("OS: ").AppendLine(operatingSystem)
+                        .Append("Game Version: ").AppendLine(version)
+                        .AppendLine("=====================================")
+                        .AppendLine();
+                    using var fileStream = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+                    using var streamWriter = new StreamWriter(fileStream);
+                    streamWriter.Write(infoStringBuilder.ToString());
+
+                    while (overflowQueue.Count > 0)
+                    {
+                        streamWriter.WriteLine(overflowQueue.Dequeue());
+                    }
+                    // 写入文件尾
+                    streamWriter.WriteLine("\n=== Log End ===");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to flush logs: {e.Message}");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to write overflow logs: {e.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 使用线程池异步保存日志队列
+    /// </summary>
+    private static void QueueLogsToSave(Queue<string> oldQueue)
+    {
+        // 使用线程池而不是创建新线程
+        ThreadPool.QueueUserWorkItem(_ =>
+        {
+            try
+            {
+                FlushLogsToFile(oldQueue);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to save logs in thread pool: {e.Message}");
+            }
+        });
+    }
+
 }
