@@ -12,6 +12,7 @@ public class Test : MonoBehaviour
     {
         //CustomLogger.LogWarning("游戏报警2.0");
         //CustomLogger.LogError("测试报错");
-        LogManager.LogError("测试报错");
+        //LogManager.LogWarning("测试报警");
+        //LogManager.LogError("测试报错");
     }
 }

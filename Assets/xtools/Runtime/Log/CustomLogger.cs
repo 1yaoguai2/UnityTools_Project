@@ -30,6 +30,12 @@ public static class CustomLogger
     private static string operatingSystem;
     private static string version;
 
+    //日志堆栈信息
+    private static string fileName;
+    private static string lineNumber;
+    private static LogType logType;
+
+
     /// <summary>
     /// 重置StringBuilder的状态和容量为初始值
     /// </summary>
@@ -45,11 +51,12 @@ public static class CustomLogger
     [RuntimeInitializeOnLoadMethod]
     private static void RegisterQuitHandler()
     {
+        //Application.logMessageReceivedThreaded += OnLogMessageReceived;
         GetComputerInfo();
         Application.quitting += () =>
         {
-            Log("Game Exit!");
             FlushLogsToFile(LogQueue);
+            //Application.logMessageReceivedThreaded -= OnLogMessageReceived;
         };
     }
 
@@ -95,6 +102,20 @@ public static class CustomLogger
     }
 
     /// <summary>
+    /// 收到日志消息
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <param name="stacktrace"></param>
+    /// <param name="type"></param>
+    private static void OnLogMessageReceived(string condition, string stacktrace, LogType type)
+    {
+        //stacktrace如何使用堆栈字符串获取有用信息
+        //fileName？
+        //lineNumber？
+        logType = type;
+    }
+
+    /// <summary>
     /// 记录日志信息
     /// </summary>
     /// <param name="message">日志内容</param>
@@ -129,7 +150,7 @@ public static class CustomLogger
                     Debug.Log(fullMessage, context);
                     break;
             }
-            //#else
+#else
             ResetStringBuilder();
 
             s_StringBuilder

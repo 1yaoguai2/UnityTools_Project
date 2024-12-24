@@ -83,6 +83,7 @@ namespace XTools.EditorTools
             }
             catch (Exception e)
             {
+                EditorUtility.DisplayDialog("排序物体",e.Message,"确定");
                 Debug.LogError("排序出错：" + e.Message);
             }
         }
