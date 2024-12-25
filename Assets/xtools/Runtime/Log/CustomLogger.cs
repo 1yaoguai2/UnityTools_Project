@@ -160,6 +160,7 @@ public static class CustomLogger
                 .Append("File: ").Append(fileName).Append('\n')
                 .Append("Line: ").Append(lineNumber);
 
+#endif
             logMessage = s_StringBuilder.ToString();
 
 
@@ -179,7 +180,6 @@ public static class CustomLogger
 
                 LogQueue.Enqueue(logMessage);
             }
-#endif
         }
         catch (Exception e)
         {
