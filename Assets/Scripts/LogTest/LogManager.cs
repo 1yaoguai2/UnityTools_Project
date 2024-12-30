@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using UnityEngine;
-
+using Debug = UnityEngine.Debug;
 public class LogManager
 {
     private const int LOG_COUNT = 20; // 最多临时保存LOG_COUNT条日志
@@ -42,6 +43,7 @@ public class LogManager
 
     public static void Log(object message, bool recordStackTrace = false)
     {
+        var (fileName, lineNumber) = GetStackTraceInfo();
         //string logStr = "[I]" + GetLogTime() + message;
         logStr.Append(GetLogTime());
         logStr.Append(message);
@@ -57,6 +59,7 @@ public class LogManager
 
     public static void LogWarning(object message)
     {
+        var(fileName, lineNumber) = GetStackTraceInfo();
         //string warningStr = "[W]" + GetLogTime() + message;
         warningStr.Append(GetLogTime());
         warningStr.Append(message);
@@ -70,6 +73,7 @@ public class LogManager
 
     public static void LogError(object message)
     {
+        var (fileName, lineNumber) = GetStackTraceInfo();
         //string errorStr = "[E]" + GetLogTime() + message;
         errorStr.Append(GetLogTime());
         errorStr.Append(message);
@@ -309,5 +313,36 @@ public class LogManager
             "*********************************************************************************************************end");
         sw.WriteLine("LogInfo:");
         sw.WriteLine();
+    }
+
+    /// <summary>
+    /// 获取当前调用的文件名和行号
+    /// </summary>
+    private static (string fileName, int lineNumber) GetStackTraceInfo()
+    {
+        try
+        {
+            var stackTrace = new StackTrace(true);
+            // 遍历堆栈帧查找第一个非日志类的调用
+            for (int i = 0; i < stackTrace.FrameCount; i++)
+            {
+                var frame = stackTrace.GetFrame(i);
+                if (frame == null) continue;
+
+                var method = frame.GetMethod();
+                if (method == null || method.DeclaringType == null) continue;
+
+                // 跳过日志类自身的方法
+                if (method.DeclaringType == typeof(CustomLogger)) continue;
+
+                return (frame.GetFileName() ?? "Unknown", frame.GetFileLineNumber());
+            }
+        }
+        catch
+        {
+            // 如果获取堆栈信息失败，返回默认值
+        }
+
+        return ("Unknown", 0);
     }
 }

@@ -96,7 +96,7 @@ public class UniTaskUtils : MonoBehaviour
 
             // 等待下一帧
             await UniTask.Yield();  //主线程中的游戏逻辑
-            // 等待下一帧,按unity
+            // 等待下一帧,按unity的FixedUpdate来计算
             //await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
             //保持在当前线程中执行
             //await UniTask.DelayFrame(1);  //在线程池中可以循环的游戏逻辑
