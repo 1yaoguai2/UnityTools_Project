@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
@@ -11,12 +12,10 @@ public class AnimationCurveTest : MonoBehaviour
     public Vector3 endPosition;
     public float totalTime;
     public float maxHeight;
-    [Header("使用渐变属性")]
-    public bool isUseRang;
-    [Range(0,1)]
-    public float targetTime;
+    [Header("使用渐变属性")] public bool isUseRang;
+    [Range(0, 1)] public float targetTime;
 
-    
+
     private void Start()
     {
         startPosition = transform.position;
@@ -30,6 +29,7 @@ public class AnimationCurveTest : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(FlyWithCurve());
         }
+
         if (isUseRang)
         {
             Vector3 dir = (endPosition - startPosition).normalized;
@@ -48,9 +48,20 @@ public class AnimationCurveTest : MonoBehaviour
         {
             float normalizedTime = time / totalTime;
             float sampleRate = curve.Evaluate(normalizedTime);
-            transform.position = startPosition + dir * (distance * normalizedTime) + (sampleRate * maxHeight) * Vector3.up;
+            transform.position = startPosition + dir * (distance * normalizedTime) +
+                                 (sampleRate * maxHeight) * Vector3.up;
             time += Time.deltaTime;
             yield return null;
+        }
+    }
+
+    private void OnGUI()
+    {
+
+        if (GUI.Button(new Rect(100, 100, 100, 30), "按Q播放动画"))
+        {
+            StopAllCoroutines();
+            StartCoroutine(FlyWithCurve());
         }
     }
 }
