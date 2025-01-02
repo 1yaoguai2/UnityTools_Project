@@ -6,11 +6,11 @@ public class TestLog : MonoBehaviour
 {
     void Start()
     {
-        LogManager.Log("开始游戏");
+        CustomLogger.Log("开始游戏");
     }
 
     void Update()
     {
-        LogManager.LogError("游戏故障");
+        CustomLogger.LogError("游戏故障");
     }
 }

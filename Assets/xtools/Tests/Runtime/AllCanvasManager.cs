@@ -24,11 +24,11 @@ public class AllCanvasManager : MonoBehaviour
     private void InitUIPrefabsPath()
     {
         Dictionary<string, string> uIPath = new Dictionary<string, string>();
-        uIPath.Add(UIConst.MainCanvas, UIConst.MainCanvas);
-        uIPath.Add(UIConst.ConveyCanvas, UIConst.ConveyCanvas);
-        uIPath.Add(UIConst.CraneCanvas, UIConst.CraneCanvas);
-        uIPath.Add(UIConst.TimeCanvas, UIConst.TimeCanvas);
-        UIManager.Instance.InitDics(uIPath);
+        // uIPath.Add(UIConst.MainCanvas, UIConst.MainCanvas);
+        // uIPath.Add(UIConst.ConveyCanvas, UIConst.ConveyCanvas);
+        // uIPath.Add(UIConst.CraneCanvas, UIConst.CraneCanvas);
+        // uIPath.Add(UIConst.TimeCanvas, UIConst.TimeCanvas);
+        //UIManager.Instance.InitDics(uIPath);
     }
     
     /// <summary>
@@ -36,8 +36,8 @@ public class AllCanvasManager : MonoBehaviour
     /// </summary>
     private void OpenUIs()
     {
-        UIManager.Instance.OpenPanel(UIConst.TimeCanvas);
-        UIManager.Instance.OpenPanel(UIConst.MainCanvas);
+        // UIManager.Instance.OpenPanel(UIConst.TimeCanvas);
+        // UIManager.Instance.OpenPanel(UIConst.MainCanvas);
     }
     
     /// <summary>
