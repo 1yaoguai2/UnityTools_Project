@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aca0de07224dca4e9e844d2a59f980d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level1Scene: {fileID: 11400000, guid: 4b9bca0716fe57045ac950fc7e6b86d2, type: 2}
+  targetScene: {fileID: 11400000, guid: 4b9bca0716fe57045ac950fc7e6b86d2, type: 2}
   loadSceneEvent: {fileID: 11400000, guid: 115ca1f7de3c5c345a36e8ba921c2ed2, type: 2}
 --- !u!4 &1634071498
 Transform:

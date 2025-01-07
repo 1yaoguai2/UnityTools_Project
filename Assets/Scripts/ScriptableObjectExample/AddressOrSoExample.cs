@@ -2,10 +2,11 @@ using System;
 using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class AddressOrSoExample : MonoBehaviour
 {
-    public GameSceneSO level1Scene;
+    public GameSceneSO targetScene;
     public VoidEventSO loadSceneEvent;
 
     private void OnEnable()
@@ -20,7 +21,7 @@ public class AddressOrSoExample : MonoBehaviour
 
     private void LoadScene()
     {
-        level1Scene.sceneReference.LoadSceneAsync(LoadSceneMode.Single,true);
+        targetScene.sceneReference.LoadSceneAsync(LoadSceneMode.Single,true);
     }
 
     private void OnGUI()
