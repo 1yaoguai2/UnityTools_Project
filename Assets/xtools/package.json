@@ -1,11 +1,14 @@
 {
     "name": "xtools",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "displayName": "XTools",
     "description": "This is Unity Tools!",
     "author": {
         "name": "xkz",
         "email": "171802082@qq.com",
         "url": "https://1yaoguai2.github.io/PersonalWeb_Project/"
+    },
+    "dependencies": {
+        "com.unity.addressables": "1.21.21"
     }
 }
