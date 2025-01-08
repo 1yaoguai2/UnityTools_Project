@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using XTools.UI;
 
 /// <summary>
@@ -7,6 +8,7 @@ using XTools.UI;
 /// </summary>
 public class AllCanvasManager : MonoBehaviour
 {
+    public AssetLabelReference uiLabel;
     void Start()
     {
         InitUIPrefabsPath();
@@ -19,15 +21,20 @@ public class AllCanvasManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 初始化UI预制体地址
+    /// 初始化UI资产
     /// </summary>
     private void InitUIPrefabsPath()
     {
         Dictionary<string, string> uIPath = new Dictionary<string, string>();
-        // uIPath.Add(UIConst.MainCanvas, UIConst.MainCanvas);
-        // uIPath.Add(UIConst.ConveyCanvas, UIConst.ConveyCanvas);
-        // uIPath.Add(UIConst.CraneCanvas, UIConst.CraneCanvas);
-        // uIPath.Add(UIConst.TimeCanvas, UIConst.TimeCanvas);
+
+        //通过标签查找所有资源
+        Addressables.LoadAssetsAsync<GameUISO>(uiLabel, (result) =>
+        {
+              Debug.Log("加载UI" + result.name);
+              Debug.Log("UI类型"+ result.uiType);
+            
+              //uIPath.Add(result.name,result.name);
+        });
         //UIManager.Instance.InitDics(uIPath);
     }
     

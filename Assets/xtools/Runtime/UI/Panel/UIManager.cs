@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+
 
 namespace XTools.UI
 {
@@ -22,7 +24,7 @@ namespace XTools.UI
         }
 
         //ui地址字典
-        public Dictionary<string, string> pathDic;
+        public Dictionary<string, GameUISO> gameUISODic;
         public Dictionary<string, GameObject> prefabDic;
         public Dictionary<string, BasePanel> panelDic;
 
@@ -33,7 +35,7 @@ namespace XTools.UI
         {
             get
             {
-                if (uiRoot == null)
+                if (uiRoot is null)
                 {
                     uiRoot = GameObject.Find("AllCanvas").transform;
                 }
@@ -45,8 +47,6 @@ namespace XTools.UI
         //构造函数
         private UIManager()
         {
-            UIConst uiConst = new UIConst();
-            InitDics(uiConst.uIPrefabPathsDic);
             prefabDic = new Dictionary<string, GameObject>();
             panelDic = new Dictionary<string, BasePanel>();
         }
@@ -56,9 +56,9 @@ namespace XTools.UI
         /// 使用CanvasManager等类进行UI数据整理，传入跟新地址
         /// </summary>
         /// <param name="uiPrefabPathDic"></param>
-        public void InitDics(Dictionary<string, string> uiPrefabPathDic)
+        public void InitDics(Dictionary<string, GameUISO> uiPrefabPathDic)
         {
-            pathDic = new Dictionary<string, string>(uiPrefabPathDic);
+            gameUISODic = new Dictionary<string, GameUISO>(uiPrefabPathDic);
         }
 
 
@@ -97,8 +97,7 @@ namespace XTools.UI
             }
 
             //检查是否存在对应路径
-            string path = string.Empty;
-            if (!pathDic.TryGetValue(panelName, out path))
+            if (!gameUISODic.TryGetValue(panelName, out GameUISO panelSo))
             {
                 Debug.LogError("界面名称错误或者未配置路径：" + panelName);
                 return null;
@@ -108,8 +107,15 @@ namespace XTools.UI
             GameObject currentPanelObj = null;
             if (!prefabDic.TryGetValue(panelName, out currentPanelObj))
             {
-                string realPath = "Prefabs/UI/" + path;
-                currentPanelObj = Resources.Load<GameObject>(realPath);
+                // Addressables.LoadAssetAsync<GameUISO>(path, (panel) =>
+                // {
+                //     currentPanelObj = panel;
+                // });
+                panelSo.uiReference.LoadAssetAsync<GameObject>().Completed += (obj) =>
+                {
+                    currentPanelObj = obj.Result;
+                };
+
                 prefabDic.Add(panelName, currentPanelObj);
             }
 
@@ -128,7 +134,7 @@ namespace XTools.UI
                 Debug.LogError("界面未打开，不用关闭：" + panelName);
                 return false;
             }
-            
+
             if (currentPanel.isShow)
             {
                 if (currentPanel.panelType == PanelType.PellucidityPanel)
@@ -145,14 +151,34 @@ namespace XTools.UI
                 {
                     currentPanel.ClosePanel();
                 }
-                    
             }
             else
                 Debug.LogError("界面已经关闭：" + panelName);
 
             return true;
         }
+
+        //移除记录，并释放资源
+        public void RemovePanel(string panelName)
+        {
+            if (panelDic.TryGetValue(panelName, out BasePanel panel))
+            {
+                panelDic.Remove(panelName);
+            }
+
+            // 释放资源
+            Addressables.Release(panel);
+        }
+
+
+        //退出
+        public void Exit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+        }
     }
-
-
 }

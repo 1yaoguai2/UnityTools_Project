@@ -1,8 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TreeEditor;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AnimationCurveTest : MonoBehaviour
@@ -57,7 +53,6 @@ public class AnimationCurveTest : MonoBehaviour
 
     private void OnGUI()
     {
-
         if (GUI.Button(new Rect(100, 100, 100, 30), "按Q播放动画"))
         {
             StopAllCoroutines();

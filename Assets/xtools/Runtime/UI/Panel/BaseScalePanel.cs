@@ -56,7 +56,7 @@ namespace XTools.UI
             if(_lock) return;
             StartCoroutine(HidePlane());
         }
-
+        
         /// <summary>
         /// 显示窗口，使用StartCoroutine启动
         /// </summary>

@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-using UnityEditor;
 using UnityEngine;
 
 public enum Rate { Default, Sixty, HundredTwenty, Customize };
@@ -39,7 +37,7 @@ public class GetFPS : MonoBehaviour
             m_FPS = m_FrameUpdate / m_UpdateShowDeltaTime;
             m_UpdateShowDeltaTime = 0;
             m_FrameUpdate = 0;
-            FPS_Text = m_FPS.ToString() + "帧";
+            FPS_Text = m_FPS + "帧";
         }
     }
 

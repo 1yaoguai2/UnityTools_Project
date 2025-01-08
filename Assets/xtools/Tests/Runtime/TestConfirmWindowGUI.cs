@@ -12,9 +12,9 @@ public class TestConfirmWindowGUI : MonoBehaviour
 
     void Start()
     {
-        Dictionary<string, string> uIPath = new Dictionary<string, string>();
+        Dictionary<string, GameUISO> uIPath = new Dictionary<string, GameUISO>();
 
-        uIPath.Add(confirmWindowGUI, confirmWindowGUI);
+        //uIPath.Add(confirmWindowGUI, confirmWindowGUI);
         UIManager.Instance.InitDics(uIPath);
     }
 

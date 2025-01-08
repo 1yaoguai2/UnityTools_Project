@@ -49,10 +49,7 @@ namespace XTools.UI
             closeEvent = null;
             Destroy(gameObject);
 
-            if (UIManager.Instance.panelDic.ContainsKey(name))
-            {
-                UIManager.Instance.panelDic.Remove(name);
-            }
+            UIManager.Instance.RemovePanel(name);
         }
     }
 
