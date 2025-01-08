@@ -16,7 +16,7 @@ public class ReadmeEditor : Editor
 
     private static readonly MethodInfo s_LoadWindowLayoutMethod;
     private static readonly MethodInfo s_SaveWindowLayoutMethod;
-    private static string assetPath = Application.dataPath + "/xtools/Editor/TutorialInfo/Layout.wlt";
+    private static string assetPath = Application.dataPath + "/TutorialInfo/Editor/Layout.wlt";
     static ReadmeEditor()
     {
         EditorApplication.delayCall += SelectReadmeAutomatically;
