@@ -18,7 +18,7 @@ MonoBehaviour:
   - heading: "xtools\u6587\u4EF6\u5939"
     text: "\u5305\u542B\u4E86unity\u9879\u76EE\u57FA\u7840\u5E38\u7528\u4EE3\u7801\uFF0C\u53EF\u4EE5\u4F7F\u7528unity\u7684PackageManager\u5305\u901A\u8FC7URL\u5BFC\u5165"
     linkText: "Git\u5730\u5740"
-    url: https://github.com/1yaoguai2/UnityTools_Project.git
+    url: https://github.com/1yaoguai2/XTools.git
   - heading: "Package\u6587\u4EF6\u5939"
     text: "\u5305\u542B\u4E86unity\u9879\u76EE\u57FA\u7840\u5E38\u7528\u4EE3\u7801\u7684\u5BFC\u51FA\u5305"
     linkText: "\u53EF\u4EE5\u5BFC\u5165unity\u9879\u76EE\u4F7F\u7528\u548C\u7F16\u8F91\u4FEE\u6539"

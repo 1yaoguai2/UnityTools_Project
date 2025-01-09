@@ -1,5 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using xTools;
 using XTools.UI;
 
 /// <summary>
@@ -7,19 +11,17 @@ using XTools.UI;
 /// </summary>
 public class AllCanvasController : MonoBehaviour
 {
-    //该场景下所有UI名称
-    public List<string> allUINames = new List<string>();
-    //该场景需要初始化启动的ui名称
-    public List<string> initUINames = new List<string>();
-
     //菜单窗口名称
-    public string sceneMenuName;
+    private string _sceneMenuName;
+
     //当esc按下时，会优先关闭这些界面
-    public List<string> levelPanelNames = new List<string>();
+    private List<string> windowPanelNames;
+
+    public AssetLabelReference assetsLabel;
+
     void Awake()
     {
-        InitUIPrefabsPath();
-        UIInit();
+        StartCoroutine(InitUI());
     }
 
     private void Update()
@@ -31,28 +33,38 @@ public class AllCanvasController : MonoBehaviour
     /// <summary>
     /// 初始化UI预制体地址
     /// </summary>
-    private void InitUIPrefabsPath()
+    private IEnumerator InitUI()
     {
-        Dictionary<string, string> uIPath = new Dictionary<string, string>();
-        foreach (var uiName in allUINames)
+        Dictionary<string, GameUISO> uISO = new Dictionary<string, GameUISO>();
+        windowPanelNames = new List<string>();
+        //该场景下所有UI资产
+        var handle = Addressables.LoadAssetAsync<GameUISO>(assetsLabel);
+        handle.Completed += (gameUISo) =>
         {
-            uIPath.Add(uiName, uiName);
-        }
-        // uIPath.Add(UIConst.TimeCanvas, UIConst.TimeCanvas);
-        UIManager.Instance.InitDics(uIPath);
+            Debug.Log("GameUISO名称 " + gameUISo.Result.name);
+            if (gameUISo.Result.uiType == UIType.Window)
+            {
+                windowPanelNames.Add(gameUISo.Result.name);
+            }
+
+            uISO.Add(gameUISo.Result.name, gameUISo.Result);
+        };
+        while (!handle.IsDone) yield return null;
+        UIManager.Instance.InitDics(uISO);
+        InitOpenUI();
+        Addressables.Release(handle);
     }
 
     /// <summary>
-    /// 初始化生成窗口
+    /// 初始化生成基础窗口UI
     /// </summary>
-    private void UIInit()
+    private void InitOpenUI()
     {
-        // UIManager.Instance.OpenPanel(UIConst.MapCanvas);
-        // UIManager.Instance.OpenPanel(UIConst.MainCanvas);
-        // UIManager.Instance.OpenPanel(UIConst.ConfirmCanvas);
-        foreach (var uiName in initUINames)
+        //查找所有基础UI，并打开
+        var baseGameUISos = UIManager.Instance.gameUISODic.Values.ToList().FindAll(t => t.uiType == UIType.BasePanel);
+        foreach (var baseGameUISo in baseGameUISos)
         {
-            UIManager.Instance.OpenPanel(uiName);
+            UIManager.Instance.OpenPanel(baseGameUISo.name);
         }
     }
 
@@ -71,79 +83,42 @@ public class AllCanvasController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            bool isCloseLevelPanel = false;
-            foreach (var planeName in levelPanelNames)
+            var windowGameUISos =
+                UIManager.Instance.gameUISODic.Where(t => t.Value.uiType == UIType.Window).ToDictionary(p => p.Key);
+            foreach (var openPanel in UIManager.Instance.openPanelDic)
             {
-                if (UIManager.Instance.panelDic.TryGetValue(planeName, out BasePanel levelPanel))
+                if (windowGameUISos.ContainsKey(openPanel.Key))
                 {
-                    if (levelPanel.isShow)
+                    if (openPanel.Value.isShow)
                     {
-                        UIManager.Instance.ClosePanel(planeName);
-                        isCloseLevelPanel = true;
+                        UIManager.Instance.ClosePanel(openPanel.Key);
+                        return;
                     }
                 }
             }
-            if (isCloseLevelPanel) return;
-            if (string.IsNullOrEmpty(sceneMenuName)) return;
-            if (UIManager.Instance.panelDic.TryGetValue(sceneMenuName, out BasePanel menuPanel))
+
+            if (string.IsNullOrEmpty(_sceneMenuName))
+            {
+                //没有菜单界面，也没有打开的窗口，启动退出界面
+                var confirmPanel = UIManager.Instance.OpenPanel("ConfirmUI");
+                if (confirmPanel is null) return;
+                var confirmCanvas = confirmPanel as ConfirmWindowGUI;
+                confirmCanvas.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
+                return;
+            }
+
+            if (UIManager.Instance.openPanelDic.TryGetValue(_sceneMenuName, out BasePanel menuPanel))
             {
                 if (menuPanel.isShow)
-                {
-                    UIManager.Instance.ClosePanel(sceneMenuName);
-                    //var component = Camera.main.GetComponent<FirstPersonController>();
-                    //if (component is not null)
-                    //{
-                    //    component.LockCursor = false;
-                    //}
-                    return;
-                }
-            }
-
-            UIManager.Instance.OpenPanel(sceneMenuName);
-            //var firstPersonController = Camera.main.GetComponent<FirstPersonController>();
-            //if (firstPersonController is not null)
-            //{
-            //    firstPersonController.LockCursor = true;
-            //}
-
-            //没有菜单界面，直接退出
-            if (sceneMenuName == "ConfirmCanvas")
-            {
-                UIManager.Instance.panelDic.TryGetValue(UIConst.ConfirmCanvas, out BasePanel confirmPanel);
-                //var confirmCanvas = confirmPanel as ConfirmCanvasController;
-                //if (confirmCanvas != null) confirmCanvas.ShowWindow("是否关闭软件！", Exit, () =>
-                //{
-                //    if (firstPersonController is not null)
-                //    {
-                //        firstPersonController.LockCursor = false;
-                //    }
-                //});
+                    UIManager.Instance.ClosePanel(_sceneMenuName);
+                else
+                    UIManager.Instance.OpenPanel(_sceneMenuName);
             }
         }
     }
 
-    /// <summary>
-    /// 按键控制的界面
-    /// </summary>
-    /// <param name="keyCode"></param>
-    /// <param name="planeName"></param>
-    private void KeyDownOpenPanel(KeyCode keyCode, string planeName)
-    {
-        if (Input.GetKeyDown(keyCode))
-        {
-            if (UIManager.Instance.panelDic.TryGetValue(planeName, out BasePanel taskPanel))
-            {
-                if (taskPanel.isShow)
-                {
-                    UIManager.Instance.ClosePanel(planeName);
-                    return;
-                }
-            }
 
-            //未升成panel或者窗口关闭
-            UIManager.Instance.OpenPanel(planeName);
-        }
-    }
+    //测试
 
     /// <summary>
     /// 输入测试窗口
@@ -170,13 +145,26 @@ public class AllCanvasController : MonoBehaviour
         // }
     }
 
-    public static void Exit()
+    /// <summary>
+    /// 按键控制的界面
+    /// </summary>
+    /// <param name="keyCode"></param>
+    /// <param name="planeName"></param>
+    private void KeyDownOpenPanel(KeyCode keyCode, string planeName)
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        if (Input.GetKeyDown(keyCode))
+        {
+            if (UIManager.Instance.openPanelDic.TryGetValue(planeName, out BasePanel taskPanel))
+            {
+                if (taskPanel.isShow)
+                {
+                    UIManager.Instance.ClosePanel(planeName);
+                    return;
+                }
+            }
+
+            //未升成panel或者窗口关闭
+            UIManager.Instance.OpenPanel(planeName);
+        }
     }
 }
-

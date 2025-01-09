@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+
 
 namespace XTools.UI
 {
@@ -22,9 +24,9 @@ namespace XTools.UI
         }
 
         //ui地址字典
-        public Dictionary<string, string> pathDic;
+        public Dictionary<string, GameUISO> gameUISODic;
         public Dictionary<string, GameObject> prefabDic;
-        public Dictionary<string, BasePanel> panelDic;
+        public Dictionary<string, BasePanel> openPanelDic;
 
         //UI预制体挂载节点
         private Transform uiRoot;
@@ -33,7 +35,7 @@ namespace XTools.UI
         {
             get
             {
-                if (uiRoot == null)
+                if (uiRoot is null)
                 {
                     uiRoot = GameObject.Find("AllCanvas").transform;
                 }
@@ -45,10 +47,8 @@ namespace XTools.UI
         //构造函数
         private UIManager()
         {
-            UIConst uiConst = new UIConst();
-            InitDics(uiConst.uIPrefabPathsDic);
             prefabDic = new Dictionary<string, GameObject>();
-            panelDic = new Dictionary<string, BasePanel>();
+            openPanelDic = new Dictionary<string, BasePanel>();
         }
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace XTools.UI
         /// 使用CanvasManager等类进行UI数据整理，传入跟新地址
         /// </summary>
         /// <param name="uiPrefabPathDic"></param>
-        public void InitDics(Dictionary<string, string> uiPrefabPathDic)
+        public void InitDics(Dictionary<string, GameUISO> uiPrefabPathDic)
         {
-            pathDic = new Dictionary<string, string>(uiPrefabPathDic);
+            gameUISODic = new Dictionary<string, GameUISO>(uiPrefabPathDic);
         }
 
 
@@ -71,7 +71,7 @@ namespace XTools.UI
         {
             BasePanel basePanel = null;
             //检查是否已经打开界面
-            if (panelDic.TryGetValue(panelName, out basePanel))
+            if (openPanelDic.TryGetValue(panelName, out basePanel))
             {
                 if (!basePanel.isShow)
                 {
@@ -97,8 +97,7 @@ namespace XTools.UI
             }
 
             //检查是否存在对应路径
-            string path = string.Empty;
-            if (!pathDic.TryGetValue(panelName, out path))
+            if (!gameUISODic.TryGetValue(panelName, out GameUISO panelSo))
             {
                 Debug.LogError("界面名称错误或者未配置路径：" + panelName);
                 return null;
@@ -108,27 +107,30 @@ namespace XTools.UI
             GameObject currentPanelObj = null;
             if (!prefabDic.TryGetValue(panelName, out currentPanelObj))
             {
-                string realPath = "Prefabs/UI/" + path;
-                currentPanelObj = Resources.Load<GameObject>(realPath);
+                var handle = panelSo.uiReference.LoadAssetAsync<GameObject>();
+                handle.WaitForCompletion();
+                currentPanelObj = handle.Result;
                 prefabDic.Add(panelName, currentPanelObj);
+                Addressables.Release(handle);
             }
 
             GameObject panelObj = GameObject.Instantiate(currentPanelObj, UIRoot, false);
             basePanel = panelObj.GetComponent<BasePanel>();
-            panelDic.Add(panelName, basePanel);
-            basePanel.isShow = true;
+            openPanelDic.Add(panelName, basePanel);
+            basePanel.OpenPanel(panelName);
+
             return basePanel;
         }
 
         public bool ClosePanel(string panelName)
         {
             BasePanel currentPanel = null;
-            if (!panelDic.TryGetValue(panelName, out currentPanel))
+            if (!openPanelDic.TryGetValue(panelName, out currentPanel))
             {
                 Debug.LogError("界面未打开，不用关闭：" + panelName);
                 return false;
             }
-            
+
             if (currentPanel.isShow)
             {
                 if (currentPanel.panelType == PanelType.PellucidityPanel)
@@ -145,14 +147,31 @@ namespace XTools.UI
                 {
                     currentPanel.ClosePanel();
                 }
-                    
             }
             else
                 Debug.LogError("界面已经关闭：" + panelName);
 
             return true;
         }
+
+        //移除打开
+        public void RemoveOpenPanel(string panelName)
+        {
+            if (openPanelDic.TryGetValue(panelName, out BasePanel panel))
+            {
+                openPanelDic.Remove(panelName);
+            }
+        }
+
+
+        //退出
+        public void Exit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+        }
     }
-
-
 }

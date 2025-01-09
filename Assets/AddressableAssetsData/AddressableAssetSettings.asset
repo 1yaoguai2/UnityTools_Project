@@ -41,12 +41,13 @@ MonoBehaviour:
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
-  m_BuildAddressablesWithPlayerBuild: 0
+  m_BuildAddressablesWithPlayerBuild: 1
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
   - {fileID: 11400000, guid: 5b5cc5f179390704fb8ead1b8d4db255, type: 2}
   - {fileID: 11400000, guid: 1e3cbb96af1cbfe42be71043a3a22c0d, type: 2}
   - {fileID: 11400000, guid: 4bf108237954d0b4aa1d52288ef5a974, type: 2}
+  - {fileID: 11400000, guid: c4c5c1559a9c03d40a630726d35f547c, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -88,6 +89,10 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - UISO
+    - SceneSO
+    - Scene
+    - UI
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: a22860deccd2ef1479261f88ac67f3f4, type: 2}

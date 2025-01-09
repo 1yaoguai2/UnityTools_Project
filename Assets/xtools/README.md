@@ -10,14 +10,26 @@ Unity官方文档：[Unity - Manual: Project manifest](https://docs.unity3d.com/
 
 
 
+# 更新插件步骤
+
+
+
 
 
 # 插件程序集
 
-未对插件的Editor和Runtime创建AssemblyDefinition，原因：理不清依赖关系
+未对插件的Editor和Test创建AssemblyDefinition，原因：理不清依赖关系
+
+对Runtime创建了程序集，依赖
+
+Unity.TextMeshPro
+Unity.Addressables
+Unity.ResourceManager
 
 装配集合的应用：
 
 Unity小技巧 如何使用AssemlyDefinition划分多个程序集 减少编译时间
 
 [Unity小技巧 如何使用AssemlyDefinition划分多个程序集 减少编译时间_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Ud4y1w7zC/?spm_id_from=333.1387.favlist.content.click&vd_source=a08df359422d16d82a30f019bf9ebb8c)
+
+

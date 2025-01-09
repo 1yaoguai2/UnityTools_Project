@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace XTools.UI
 {
@@ -48,11 +49,8 @@ namespace XTools.UI
             openEvent = null;
             closeEvent = null;
             Destroy(gameObject);
-
-            if (UIManager.Instance.panelDic.ContainsKey(name))
-            {
-                UIManager.Instance.panelDic.Remove(name);
-            }
+          
+            UIManager.Instance.RemoveOpenPanel(name);
         }
     }
 

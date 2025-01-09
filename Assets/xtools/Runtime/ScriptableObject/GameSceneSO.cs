@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using xTools;
 
-[CreateAssetMenu(menuName = "Game Scene/GameSceneSO")]
+[CreateAssetMenu(menuName = "Game Assets/GameSceneSO")]
 public class GameSceneSO : ScriptableObject
 {
     public SceneType sceneType;
