@@ -26,7 +26,6 @@ public class AllCanvasController : MonoBehaviour
 
     private void Update()
     {
-        InputTestUpdate();
         PanelOpen();
     }
 
@@ -35,38 +34,40 @@ public class AllCanvasController : MonoBehaviour
     /// </summary>
     private IEnumerator InitUI()
     {
-        Dictionary<string, GameUISO> uISO = new Dictionary<string, GameUISO>();
+        Dictionary<string, GameUISO> uiSo = new Dictionary<string, GameUISO>();
         windowPanelNames = new List<string>();
+        GameUISO gameUISo;
+        string uiName;
         //该场景下所有UI资产
         var handle = Addressables.LoadAssetAsync<GameUISO>(assetsLabel);
-        handle.Completed += (gameUISo) =>
+        handle.Completed += (gameUI) =>
         {
-            Debug.Log("GameUISO名称 " + gameUISo.Result.name);
-            if (gameUISo.Result.uiType == UIType.Window)
+            gameUISo = gameUI.Result;
+            uiName = gameUISo.name;
+            CustomLogger.Log("GameUISo名称 " + uiName);
+            if (gameUISo.uiType == UIType.Window)
             {
-                windowPanelNames.Add(gameUISo.Result.name);
+                windowPanelNames.Add(uiName);
+            }
+            else if(gameUISo.uiType == UIType.Menu)
+            {
+                _sceneMenuName = uiName;
             }
 
-            uISO.Add(gameUISo.Result.name, gameUISo.Result);
+            uiSo.Add(uiName, gameUISo);
         };
         while (!handle.IsDone) yield return null;
-        UIManager.Instance.InitDics(uISO);
-        InitOpenUI();
-        Addressables.Release(handle);
-    }
-
-    /// <summary>
-    /// 初始化生成基础窗口UI
-    /// </summary>
-    private void InitOpenUI()
-    {
+        UIManager.Instance.InitDics(uiSo);
         //查找所有基础UI，并打开
         var baseGameUISos = UIManager.Instance.gameUISODic.Values.ToList().FindAll(t => t.uiType == UIType.BasePanel);
         foreach (var baseGameUISo in baseGameUISos)
         {
             UIManager.Instance.OpenPanel(baseGameUISo.name);
         }
+        Addressables.Release(handle);
     }
+
+
 
     /// <summary>
     /// 窗口打开
@@ -101,9 +102,19 @@ public class AllCanvasController : MonoBehaviour
             {
                 //没有菜单界面，也没有打开的窗口，启动退出界面
                 var confirmPanel = UIManager.Instance.OpenPanel("ConfirmUI");
-                if (confirmPanel is null) return;
-                var confirmCanvas = confirmPanel as ConfirmWindowGUI;
-                confirmCanvas.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
+                if (confirmPanel is null)
+                {
+                    confirmPanel = UIManager.Instance.OpenPanel("ConfirmGUI");
+                    if(confirmPanel is null) return;
+                    var confirmGUIWindow = confirmPanel as ConfirmWindowGUI;
+                    confirmGUIWindow.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
+                }
+                else
+                {
+                    var confirmCanvas = confirmPanel as ConfirmWindow;
+                    confirmCanvas.LoadConfirmWindow("是否关闭软件！", UIManager.Instance.Exit, null);
+                }
+               
                 return;
             }
 
@@ -117,54 +128,4 @@ public class AllCanvasController : MonoBehaviour
         }
     }
 
-
-    //测试
-
-    /// <summary>
-    /// 输入测试窗口
-    /// </summary>
-    void InputTestUpdate()
-    {
-        // if (Input.GetKeyDown(KeyCode.P))
-        // {
-        //     UIManager.Instance.OpenPanel(UIConst.ConveyCanvas);
-        // }
-        // if (Input.GetKeyDown(KeyCode.L))
-        // {
-        //     UIManager.Instance.ClosePanel(UIConst.ConveyCanvas);
-        // }
-        //
-        // if (Input.GetKeyDown(KeyCode.O))
-        // {
-        //     UIManager.Instance.OpenPanel(UIConst.CraneCanvas);
-        // }
-        //
-        // if (Input.GetKeyDown(KeyCode.K))
-        // {
-        //     UIManager.Instance.ClosePanel(UIConst.CraneCanvas);
-        // }
-    }
-
-    /// <summary>
-    /// 按键控制的界面
-    /// </summary>
-    /// <param name="keyCode"></param>
-    /// <param name="planeName"></param>
-    private void KeyDownOpenPanel(KeyCode keyCode, string planeName)
-    {
-        if (Input.GetKeyDown(keyCode))
-        {
-            if (UIManager.Instance.openPanelDic.TryGetValue(planeName, out BasePanel taskPanel))
-            {
-                if (taskPanel.isShow)
-                {
-                    UIManager.Instance.ClosePanel(planeName);
-                    return;
-                }
-            }
-
-            //未升成panel或者窗口关闭
-            UIManager.Instance.OpenPanel(planeName);
-        }
-    }
 }

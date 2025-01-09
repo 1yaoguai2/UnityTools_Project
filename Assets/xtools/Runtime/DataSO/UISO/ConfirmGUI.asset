@@ -9,8 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: Prefab_ContentUpdateGroupSchema
+  m_Script: {fileID: 11500000, guid: 42ac59f0fe6f2784caac40fd41983f0b, type: 3}
+  m_Name: ConfirmGUI
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: c4c5c1559a9c03d40a630726d35f547c, type: 2}
-  m_StaticContent: 0
+  uiType: 1
+  uiReference:
+    m_AssetGUID: 1cecd44dfb83a0e4092fc0bc7e0d75f7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
