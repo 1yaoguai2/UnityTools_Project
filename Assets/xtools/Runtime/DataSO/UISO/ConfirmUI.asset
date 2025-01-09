@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ac59f0fe6f2784caac40fd41983f0b, type: 3}
   m_Name: ConfirmUI
   m_EditorClassIdentifier: 
-  uiType: 0
+  uiType: 1
   uiReference:
     m_AssetGUID: 1cecd44dfb83a0e4092fc0bc7e0d75f7
     m_SubObjectName: 

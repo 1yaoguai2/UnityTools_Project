@@ -24,7 +24,7 @@ public class TestConfirmWindowGUI : MonoBehaviour
         {
             isTest1 = false;
             UIManager.Instance.OpenPanel(confirmWindowGUI);
-            bool find = UIManager.Instance.panelDic.TryGetValue(confirmWindowGUI, out BasePanel confirmWindow);
+            bool find = UIManager.Instance.openPanelDic.TryGetValue(confirmWindowGUI, out BasePanel confirmWindow);
             if (find)
             {
                 ConfirmWindowGUI newConfirmWindow = confirmWindow as ConfirmWindowGUI;
@@ -37,7 +37,7 @@ public class TestConfirmWindowGUI : MonoBehaviour
         {
             isTest2 = false;
             UIManager.Instance.OpenPanel(confirmWindowGUI);
-            bool find = UIManager.Instance.panelDic.TryGetValue(confirmWindowGUI, out BasePanel confirmWindow);
+            bool find = UIManager.Instance.openPanelDic.TryGetValue(confirmWindowGUI, out BasePanel confirmWindow);
             if (find)
             {
                 ConfirmWindowGUI newConfirmWindow = confirmWindow as ConfirmWindowGUI;

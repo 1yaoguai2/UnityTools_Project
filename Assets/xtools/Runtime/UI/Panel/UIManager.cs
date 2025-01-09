@@ -26,7 +26,7 @@ namespace XTools.UI
         //ui地址字典
         public Dictionary<string, GameUISO> gameUISODic;
         public Dictionary<string, GameObject> prefabDic;
-        public Dictionary<string, BasePanel> panelDic;
+        public Dictionary<string, BasePanel> openPanelDic;
 
         //UI预制体挂载节点
         private Transform uiRoot;
@@ -48,7 +48,7 @@ namespace XTools.UI
         private UIManager()
         {
             prefabDic = new Dictionary<string, GameObject>();
-            panelDic = new Dictionary<string, BasePanel>();
+            openPanelDic = new Dictionary<string, BasePanel>();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace XTools.UI
         {
             BasePanel basePanel = null;
             //检查是否已经打开界面
-            if (panelDic.TryGetValue(panelName, out basePanel))
+            if (openPanelDic.TryGetValue(panelName, out basePanel))
             {
                 if (!basePanel.isShow)
                 {
@@ -107,29 +107,25 @@ namespace XTools.UI
             GameObject currentPanelObj = null;
             if (!prefabDic.TryGetValue(panelName, out currentPanelObj))
             {
-                // Addressables.LoadAssetAsync<GameUISO>(path, (panel) =>
-                // {
-                //     currentPanelObj = panel;
-                // });
-                panelSo.uiReference.LoadAssetAsync<GameObject>().Completed += (obj) =>
-                {
-                    currentPanelObj = obj.Result;
-                };
-
+                var handle = panelSo.uiReference.LoadAssetAsync<GameObject>();
+                handle.WaitForCompletion();
+                currentPanelObj = handle.Result;
                 prefabDic.Add(panelName, currentPanelObj);
+                Addressables.Release(handle);
             }
 
             GameObject panelObj = GameObject.Instantiate(currentPanelObj, UIRoot, false);
             basePanel = panelObj.GetComponent<BasePanel>();
-            panelDic.Add(panelName, basePanel);
-            basePanel.isShow = true;
+            openPanelDic.Add(panelName, basePanel);
+            basePanel.OpenPanel(panelName);
+
             return basePanel;
         }
 
         public bool ClosePanel(string panelName)
         {
             BasePanel currentPanel = null;
-            if (!panelDic.TryGetValue(panelName, out currentPanel))
+            if (!openPanelDic.TryGetValue(panelName, out currentPanel))
             {
                 Debug.LogError("界面未打开，不用关闭：" + panelName);
                 return false;
@@ -158,16 +154,13 @@ namespace XTools.UI
             return true;
         }
 
-        //移除记录，并释放资源
-        public void RemovePanel(string panelName)
+        //移除打开
+        public void RemoveOpenPanel(string panelName)
         {
-            if (panelDic.TryGetValue(panelName, out BasePanel panel))
+            if (openPanelDic.TryGetValue(panelName, out BasePanel panel))
             {
-                panelDic.Remove(panelName);
+                openPanelDic.Remove(panelName);
             }
-
-            // 释放资源
-            Addressables.Release(panel);
         }
 
 
