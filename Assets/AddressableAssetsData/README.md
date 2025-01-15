@@ -165,3 +165,31 @@ private async void InstantiateCube()
 
 
 
+# Addressable 热跟新参考
+
+[Unity 之 Addressable可寻址系统 -- 资源热更新 -- 进阶（四）_addressables热更-CSDN博客](https://blog.csdn.net/Czhenya/article/details/128579561)
+
+[Unity通用框架搭建（三）—— 基于Addressable资源加载更新_addressablemanager-CSDN博客](https://blog.csdn.net/qq_19428987/article/details/111317560)
+
+[Addressable技术总结 - 知乎](https://zhuanlan.zhihu.com/p/615013636)
+
+# Addressable 报错解决
+
+1. Addressable下载新文件时的链接文件名是很久以前的
+
+```
+/ui assets all 314baae50c0845144d113adce6480e5f.bundle
+url : https://a.unity.cn/client_api/v1/buckets/921b593f-cef4-47d6-a6d8-705c1aae509e/content/stand....
+```
+
+  Build- >Clear Build Cache->All，然后重新打包，切换场景尝试，直到链接跟新
+
+2. 编辑器下测试热更报错
+
+```
+Error while downloading Asset Bundle: CRC Mismatch. Provided 4f430aba, calculated 9726a7c8 from data. Will not load AssetBundle 'https://a.unity.cn/client_api/v1/buckets/921b593f-cef4-47d6-a6d8-705c1aae509e/content/StandaloneWindows64/ui_assets_all.bundle'
+```
+
+   编辑器报错，无所谓，只要打包的项目文件，启动后热更新成功就行。
+
+3. 测试热更新时，需要等待服务器冷却，不然会干扰测试结果。

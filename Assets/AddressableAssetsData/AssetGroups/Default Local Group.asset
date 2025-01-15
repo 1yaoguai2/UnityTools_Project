@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 1a3f1a2c5dd20d74a99be4ac4077ce36
   m_SerializeEntries:
   - m_GUID: 651326f3693dcba4a9c13afb5935b185
-    m_Address: ConfirmUI
+    m_Address: ConfirmGUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - UISO
