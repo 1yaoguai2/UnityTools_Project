@@ -28,7 +28,10 @@ public class GetFPS : MonoBehaviour
 
     private void Update()
     {
+        #if ENABLE_INPUT_SYSTEM
+        #else
         if (Input.GetKeyDown(KeyCode.F8)) show = !show;
+        #endif
         if (!show) return;
         m_FrameUpdate++;
         m_UpdateShowDeltaTime += Time.deltaTime;
