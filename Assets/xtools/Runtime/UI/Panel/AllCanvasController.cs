@@ -36,25 +36,25 @@ public class AllCanvasController : MonoBehaviour
     {
         Dictionary<string, GameUISO> uiSo = new Dictionary<string, GameUISO>();
         windowPanelNames = new List<string>();
-        GameUISO gameUISo;
+        GameUISO gameUiSo;
         string uiName;
         //该场景下所有UI资产
         var handle = Addressables.LoadAssetAsync<GameUISO>(assetsLabel);
         handle.Completed += (gameUI) =>
         {
-            gameUISo = gameUI.Result;
-            uiName = gameUISo.name;
+            gameUiSo = gameUI.Result;
+            uiName = gameUiSo.name;
             CustomLogger.Log("GameUISo名称 " + uiName);
-            if (gameUISo.uiType == UIType.Window)
+            if (gameUiSo.uiType == UIType.Window)
             {
                 windowPanelNames.Add(uiName);
             }
-            else if(gameUISo.uiType == UIType.Menu)
+            else if(gameUiSo.uiType == UIType.Menu)
             {
                 _sceneMenuName = uiName;
             }
 
-            uiSo.Add(uiName, gameUISo);
+            uiSo.Add(uiName, gameUiSo);
         };
         while (!handle.IsDone) yield return null;
         UIManager.Instance.InitDics(uiSo);
@@ -64,7 +64,8 @@ public class AllCanvasController : MonoBehaviour
         {
             UIManager.Instance.OpenPanel(baseGameUISo.name);
         }
-        Addressables.Release(handle);
+        //TODO:资源无法释放
+        //Addressables.Release(handle);  
     }
 
 
