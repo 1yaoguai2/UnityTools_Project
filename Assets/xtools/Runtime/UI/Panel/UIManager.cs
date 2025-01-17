@@ -91,7 +91,7 @@ namespace XTools.UI
                     }
                 }
                 else
-                    Debug.LogError("界面已经打开：" + panelName);
+                    CustomLogger.LogError("界面已经打开：" + panelName);
 
                 return basePanel;
             }
@@ -99,7 +99,7 @@ namespace XTools.UI
             //检查是否存在对应路径
             if (!gameUISODic.TryGetValue(panelName, out GameUISO panelSo))
             {
-                Debug.LogError("界面名称错误或者未配置路径：" + panelName);
+                CustomLogger.LogError("界面名称错误或者未配置路径：" + panelName);
                 return null;
             }
 
@@ -109,13 +109,12 @@ namespace XTools.UI
             {
                 var handle = panelSo.uiReference.LoadAssetAsync<GameObject>();
                 handle.WaitForCompletion();
-                currentPanelObj = handle.Result;
+                currentPanelObj = GameObject.Instantiate( handle.Result, UIRoot, false);
                 prefabDic.Add(panelName, currentPanelObj);
                 Addressables.Release(handle);
             }
 
-            GameObject panelObj = GameObject.Instantiate(currentPanelObj, UIRoot, false);
-            basePanel = panelObj.GetComponent<BasePanel>();
+            basePanel = currentPanelObj.GetComponent<BasePanel>();
             openPanelDic.Add(panelName, basePanel);
             basePanel.OpenPanel(panelName);
 
@@ -127,7 +126,7 @@ namespace XTools.UI
             BasePanel currentPanel = null;
             if (!openPanelDic.TryGetValue(panelName, out currentPanel))
             {
-                Debug.LogError("界面未打开，不用关闭：" + panelName);
+                CustomLogger.LogError("界面未打开，不用关闭：" + panelName);
                 return false;
             }
 
@@ -149,7 +148,7 @@ namespace XTools.UI
                 }
             }
             else
-                Debug.LogError("界面已经关闭：" + panelName);
+                CustomLogger.LogError("界面已经关闭：" + panelName);
 
             return true;
         }
