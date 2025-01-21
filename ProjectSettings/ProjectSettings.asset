@@ -633,7 +633,22 @@ PlayerSettings:
   webGLMemoryGeometricGrowthStep: 0.2
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: SORTIFY
+    EmbeddedLinux: SORTIFY
+    GameCoreScarlett: SORTIFY
+    GameCoreXboxOne: SORTIFY
+    LinuxHeadlessSimulation: SORTIFY
+    Nintendo Switch: SORTIFY
+    PS4: SORTIFY
+    PS5: SORTIFY
+    QNX: SORTIFY
+    Stadia: SORTIFY
+    Standalone: SORTIFY
+    WebGL: SORTIFY
+    Windows Store Apps: SORTIFY
+    XboxOne: SORTIFY
+    tvOS: SORTIFY
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

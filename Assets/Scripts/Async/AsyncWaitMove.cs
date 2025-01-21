@@ -19,12 +19,15 @@ public class AsyncWaitMove : MonoBehaviour
         Move move = new Move();
         await move.AsyncMove(transform);
         CustomLogger.Log("等待移动完成！");
+        CustomLogger.Log("另一次移动");
+        await AsyncMove();
+        CustomLogger.Log("等待另一次移动完成！");
     }
 
     /// <summary>
     /// 1.不依赖于Mono
     /// </summary>
-    async void AsyncMove()
+    async Task AsyncMove()
     {
         await Task.Delay(TimeSpan.FromSeconds(1f));
         transform.position += new Vector3(2,0,0);
@@ -32,7 +35,7 @@ public class AsyncWaitMove : MonoBehaviour
 }
 
 /// <summary>
-/// 2.
+/// 2.定义在外部类中
 /// </summary>
 public class Move
 {
