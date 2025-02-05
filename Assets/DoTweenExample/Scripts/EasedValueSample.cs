@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -10,8 +10,8 @@ public class EasedValueSample : MonoBehaviour
     public float flyTime;
     public Ease easeType;
 
-    private bool _paused = false;
-    [SerializeField] [Range(0, 1)] private float _progress;
+    [SerializeField]
+    [Range(0,1)] private float _progress;
     
     void Start()
     {
@@ -25,18 +25,45 @@ public class EasedValueSample : MonoBehaviour
         transform.position = _startPoint + (targetPoint - _startPoint) * value;
     }
 
-    private IEnumerator PlayDoTween()
+    private void OnGUI()
     {
-        yield return null;
+        if (GUI.Button(new Rect(100, 0, 100, 30), "播放"))
+        {
+            StopTween();
+            StartCoroutine(PlayTween());
+        }
+        if (GUI.Button(new Rect(100, 50, 100, 30), "暂停"))
+        {
+            StopTween();
+        }
+        if (GUI.Button(new Rect(100, 100, 100, 30), "反转"))
+        {
+            StopTween();
+            StartCoroutine(ReverseTween());
+        }
+    }
+
+    private IEnumerator PlayTween()
+    {
+        while (_progress < 1)
+        {
+            _progress += flyTime * Time.deltaTime;
+            yield return null;
+        }
     }
 
     private IEnumerator ReverseTween()
     {
-        float time = flyTime * _progress;
-        while (time < flyTime)
+        while (_progress > 0)
         {
+            _progress -= flyTime * Time.deltaTime;
             yield return null;
         }
+    }
+
+    private void StopTween()
+    {
+        StopAllCoroutines();
     }
     
 }

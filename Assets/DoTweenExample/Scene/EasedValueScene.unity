@@ -320,7 +320,7 @@ Transform:
   m_Children:
   - {fileID: 1906038543}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1091900644
 MonoBehaviour:
@@ -335,8 +335,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPoint: {x: 10, y: 2, z: 0}
-  flyTime: 5
-  easeType: 32
+  flyTime: 1
+  easeType: 1
   _progress: 0
 --- !u!1 &1203147102
 GameObject:
@@ -442,7 +442,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1276364506
 GameObject:
