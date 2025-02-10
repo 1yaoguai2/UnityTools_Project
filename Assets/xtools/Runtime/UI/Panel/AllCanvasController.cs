@@ -64,8 +64,7 @@ public class AllCanvasController : MonoBehaviour
         {
             UIManager.Instance.OpenPanel(baseGameUISo.name);
         }
-        //TODO:资源无法释放
-        //Addressables.Release(handle);  
+        Addressables.Release(handle);  
     }
 
 
@@ -102,18 +101,18 @@ public class AllCanvasController : MonoBehaviour
             if (string.IsNullOrEmpty(_sceneMenuName))
             {
                 //没有菜单界面，也没有打开的窗口，启动退出界面
-                var confirmPanel = UIManager.Instance.OpenPanel("ConfirmUI");
-                if (confirmPanel is null)
+                var customUIBool = UIManager.Instance.gameUISODic.ContainsKey("ConfirmUI");
+                if (customUIBool)
                 {
-                    confirmPanel = UIManager.Instance.OpenPanel("ConfirmGUI");
-                    if(confirmPanel is null) return;
-                    var confirmGUIWindow = confirmPanel as ConfirmWindowGUI;
-                    confirmGUIWindow.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
+                    var confirmPanel = UIManager.Instance.OpenPanel("ConfirmUI");
+                    var confirmCanvas = confirmPanel as ConfirmWindow;
+                    confirmCanvas.LoadConfirmWindow("是否关闭软件！", UIManager.Instance.Exit, null);
                 }
                 else
                 {
-                    var confirmCanvas = confirmPanel as ConfirmWindow;
-                    confirmCanvas.LoadConfirmWindow("是否关闭软件！", UIManager.Instance.Exit, null);
+                    var confirmPanel = UIManager.Instance.OpenPanel("ConfirmGUI");
+                    var confirmGUIWindow = confirmPanel as ConfirmWindowGUI;
+                    confirmGUIWindow.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
                 }
                
                 return;

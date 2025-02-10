@@ -25,7 +25,7 @@ namespace XTools.UI
 
         //ui地址字典
         public Dictionary<string, GameUISO> gameUISODic;
-        public Dictionary<string, GameObject> prefabDic;
+        public Dictionary<string, AssetReference> prefabDic;
         public Dictionary<string, BasePanel> openPanelDic;
 
         //UI预制体挂载节点
@@ -37,7 +37,7 @@ namespace XTools.UI
             {
                 if (uiRoot is null)
                 {
-                    uiRoot = GameObject.Find("AllCanvas").transform;
+                    uiRoot = new GameObject("AllCanvas").transform;
                 }
 
                 return uiRoot;
@@ -47,7 +47,7 @@ namespace XTools.UI
         //构造函数
         private UIManager()
         {
-            prefabDic = new Dictionary<string, GameObject>();
+            prefabDic = new Dictionary<string, AssetReference>();
             openPanelDic = new Dictionary<string, BasePanel>();
         }
 
@@ -58,7 +58,11 @@ namespace XTools.UI
         /// <param name="uiPrefabPathDic"></param>
         public void InitDics(Dictionary<string, GameUISO> uiPrefabPathDic)
         {
-            gameUISODic = new Dictionary<string, GameUISO>(uiPrefabPathDic);
+            gameUISODic = new Dictionary<string, GameUISO>();
+            foreach (var uiPath in uiPrefabPathDic)
+            {
+                gameUISODic.Add(uiPath.Key,uiPath.Value);
+            }
         }
 
 
@@ -96,27 +100,28 @@ namespace XTools.UI
                 return basePanel;
             }
 
-            //检查是否存在对应路径
-            if (!gameUISODic.TryGetValue(panelName, out GameUISO panelSo))
-            {
-                CustomLogger.LogError("界面名称错误或者未配置路径：" + panelName);
-                return null;
-            }
+           
 
             //检查是否存在预制体
-            GameObject currentPanelObj = null;
-            if (!prefabDic.TryGetValue(panelName, out currentPanelObj))
+            if (!prefabDic.ContainsKey(panelName))
             {
-                var handle = panelSo.uiReference.LoadAssetAsync<GameObject>();
-                handle.WaitForCompletion();
-                currentPanelObj = GameObject.Instantiate( handle.Result, UIRoot, false);
-                prefabDic.Add(panelName, currentPanelObj);
-                Addressables.Release(handle);
+                //检查是否存在对应路径
+                if (!gameUISODic.TryGetValue(panelName, out GameUISO panelSo))
+                {
+                    CustomLogger.LogError("界面名称错误或者未配置路径：" + panelName);
+                    return null;
+                }
+                prefabDic.Add(panelName, panelSo.uiReference);
             }
-
+            var assetReference = prefabDic[panelName];
+            var handle = Addressables.LoadAssetAsync<GameObject>(assetReference);
+            handle.WaitForCompletion();
+            GameObject currentPanelObj = GameObject.Instantiate(handle.Result,UIRoot);
             basePanel = currentPanelObj.GetComponent<BasePanel>();
             openPanelDic.Add(panelName, basePanel);
             basePanel.OpenPanel(panelName);
+            Addressables.Release(handle);
+
 
             return basePanel;
         }
