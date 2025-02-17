@@ -39,22 +39,29 @@ public class AllCanvasController : MonoBehaviour
         GameUISO gameUiSo;
         string uiName;
         //该场景下所有UI资产
-        var handle = Addressables.LoadAssetAsync<GameUISO>(assetsLabel);
+        var handle = Addressables.LoadAssetsAsync<GameUISO>(assetsLabel, (obj) =>
+        {
+            CustomLogger.Log(obj.ToString());
+        },true);
         handle.Completed += (gameUI) =>
         {
-            gameUiSo = gameUI.Result;
-            uiName = gameUiSo.name;
-            CustomLogger.Log("GameUISo名称 " + uiName);
-            if (gameUiSo.uiType == UIType.Window)
+            for (int i = 0; i < gameUI.Result.Count; i++)
             {
-                windowPanelNames.Add(uiName);
-            }
-            else if(gameUiSo.uiType == UIType.Menu)
-            {
-                _sceneMenuName = uiName;
-            }
+                gameUiSo = gameUI.Result[i];
+                uiName = gameUiSo.name;
+                CustomLogger.Log("GameUISo名称 " + uiName);
+                if (gameUiSo.uiType == UIType.Window)
+                {
+                    windowPanelNames.Add(uiName);
+                }
+                else if (gameUiSo.uiType == UIType.Menu)
+                {
+                    UIManager.Instance.sceneMenuName = _sceneMenuName = uiName;
+                }
 
-            uiSo.Add(uiName, gameUiSo);
+                uiSo.Add(uiName, gameUiSo);
+            }
+           
         };
         while (!handle.IsDone) yield return null;
         UIManager.Instance.InitDics(uiSo);
@@ -64,9 +71,9 @@ public class AllCanvasController : MonoBehaviour
         {
             UIManager.Instance.OpenPanel(baseGameUISo.name);
         }
-        Addressables.Release(handle);  
-    }
 
+        Addressables.Release(handle);
+    }
 
 
     /// <summary>
@@ -114,7 +121,7 @@ public class AllCanvasController : MonoBehaviour
                     var confirmGUIWindow = confirmPanel as ConfirmWindowGUI;
                     confirmGUIWindow.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
                 }
-               
+
                 return;
             }
 
@@ -125,7 +132,10 @@ public class AllCanvasController : MonoBehaviour
                 else
                     UIManager.Instance.OpenPanel(_sceneMenuName);
             }
+            else
+            {
+                UIManager.Instance.OpenPanel(_sceneMenuName);
+            }
         }
     }
-
 }

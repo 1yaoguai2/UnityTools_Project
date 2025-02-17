@@ -28,6 +28,8 @@ namespace XTools.UI
         public Dictionary<string, AssetReference> prefabDic;
         public Dictionary<string, BasePanel> openPanelDic;
 
+        public string sceneMenuName;
+
         //UI预制体挂载节点
         private Transform uiRoot;
 
