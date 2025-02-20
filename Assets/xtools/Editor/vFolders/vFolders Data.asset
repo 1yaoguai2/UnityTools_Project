@@ -13,6 +13,56 @@ MonoBehaviour:
   m_Name: vFolders Data
   m_EditorClassIdentifier: 
   folderDatas_byGuid:
-    keys: []
-    values: []
+    keys:
+    - ac60aa50d313e0a4598108c09ee10f2a
+    - dd7808313f802624a8e30584d434d5f8
+    - 40ec86a52c610514db186ba40e61bbf8
+    - 8b10c6ba5bba3a440aa6df3f4f4969e8
+    - 681737a6bca73414384e4208d73e89c1
+    - be54f50a912bfc647818d684acd2c0b1
+    - b028bcd4cdaefd2498b68ec807b5d478
+    - 9b982921eb7825a4098462c94b21dcb4
+    - 3c84ecd8fa2910045a3f9de10b1d859d
+    - 14c2e05b1c6b9184398f81469413be13
+    values:
+    - iconNameOrGuid: 
+      colorIndex: 2
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 4
+      isIconRecursive: 0
+      isColorRecursive: 1
+    - iconNameOrGuid: 
+      colorIndex: 7
+      isIconRecursive: 0
+      isColorRecursive: 1
+    - iconNameOrGuid: SceneAsset Icon
+      colorIndex: 0
+      isIconRecursive: 1
+      isColorRecursive: 0
+    - iconNameOrGuid: Font Icon
+      colorIndex: 0
+      isIconRecursive: 1
+      isColorRecursive: 0
+    - iconNameOrGuid: Material Icon
+      colorIndex: 0
+      isIconRecursive: 1
+      isColorRecursive: 0
+    - iconNameOrGuid: Prefab Icon
+      colorIndex: 0
+      isIconRecursive: 1
+      isColorRecursive: 0
+    - iconNameOrGuid: ScriptableObject Icon
+      colorIndex: 0
+      isIconRecursive: 1
+      isColorRecursive: 0
+    - iconNameOrGuid: AudioSource Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 9
+      isIconRecursive: 0
+      isColorRecursive: 1
   bookmarks: []
