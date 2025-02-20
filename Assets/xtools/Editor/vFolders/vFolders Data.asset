@@ -41,7 +41,7 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 1
     - iconNameOrGuid: SceneAsset Icon
-      colorIndex: 0
+      colorIndex: 8
       isIconRecursive: 1
       isColorRecursive: 0
     - iconNameOrGuid: Font Icon
@@ -53,9 +53,9 @@ MonoBehaviour:
       isIconRecursive: 1
       isColorRecursive: 0
     - iconNameOrGuid: Prefab Icon
-      colorIndex: 0
+      colorIndex: 5
       isIconRecursive: 1
-      isColorRecursive: 0
+      isColorRecursive: 1
     - iconNameOrGuid: ScriptableObject Icon
       colorIndex: 0
       isIconRecursive: 1
@@ -73,9 +73,9 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: 
-      colorIndex: 3
+      colorIndex: 2
       isIconRecursive: 0
-      isColorRecursive: 0
+      isColorRecursive: 1
     - iconNameOrGuid: RawImage Icon
       colorIndex: 0
       isIconRecursive: 0
