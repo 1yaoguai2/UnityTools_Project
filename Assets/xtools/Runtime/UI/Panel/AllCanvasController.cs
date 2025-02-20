@@ -70,16 +70,10 @@ public class AllCanvasController : MonoBehaviour
         Addressables.Release(handle);
     }
 
-
-    
-
-#if ENABLE_INPUT_SYSTEM
     //关闭某些窗口
-    public void CloseSomePanel(InputAction.CallbackContext obj)
-    {
-        EscapeDownOpenOrClosePanel();
-    }
-#else
+    public void CloseSomePanel() => EscapeDownOpenOrClosePanel();
+        
+#if !ENABLE_INPUT_SYSTEM
     private void Update()
     {
         PanelOpen();
