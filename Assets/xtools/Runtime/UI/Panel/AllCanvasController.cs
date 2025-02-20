@@ -24,11 +24,6 @@ public class AllCanvasController : MonoBehaviour
         StartCoroutine(InitUI());
     }
 
-    private void Update()
-    {
-        PanelOpen();
-    }
-
     /// <summary>
     /// 初始化UI预制体地址
     /// </summary>
@@ -76,66 +71,71 @@ public class AllCanvasController : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 窗口打开
-    /// </summary>
-    private void PanelOpen()
+    
+
+#if ENABLE_INPUT_SYSTEM
+    //关闭某些窗口
+    public void CloseSomePanel(InputAction.CallbackContext obj)
     {
         EscapeDownOpenOrClosePanel();
     }
+#else
+    private void Update()
+    {
+        PanelOpen();
+    }
+    // 窗口跟新
+    private void PanelOpen()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) EscapeDownOpenOrClosePanel();
+    }
+#endif
+
 
     /// <summary>
     /// Escape按键的一些功能
     /// </summary>
     private void EscapeDownOpenOrClosePanel()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        var windowGameUISos =
+            UIManager.Instance.gameUISODic.Where(t => t.Value.uiType == UIType.Window).ToDictionary(p => p.Key);
+        foreach (var openPanel in UIManager.Instance.openPanelDic.Where(openPanel => 
+                     windowGameUISos.ContainsKey(openPanel.Key)).Where(openPanel => openPanel.Value.isShow))
         {
-            var windowGameUISos =
-                UIManager.Instance.gameUISODic.Where(t => t.Value.uiType == UIType.Window).ToDictionary(p => p.Key);
-            foreach (var openPanel in UIManager.Instance.openPanelDic)
-            {
-                if (windowGameUISos.ContainsKey(openPanel.Key))
-                {
-                    if (openPanel.Value.isShow)
-                    {
-                        UIManager.Instance.ClosePanel(openPanel.Key);
-                        return;
-                    }
-                }
-            }
+            UIManager.Instance.ClosePanel(openPanel.Key);
+            return;
+        }
 
-            if (string.IsNullOrEmpty(_sceneMenuName))
+        if (string.IsNullOrEmpty(_sceneMenuName))
+        {
+            //没有菜单界面，也没有打开的窗口，启动退出界面
+            var customUIBool = UIManager.Instance.gameUISODic.ContainsKey("ConfirmUI");
+            if (customUIBool)
             {
-                //没有菜单界面，也没有打开的窗口，启动退出界面
-                var customUIBool = UIManager.Instance.gameUISODic.ContainsKey("ConfirmUI");
-                if (customUIBool)
-                {
-                    var confirmPanel = UIManager.Instance.OpenPanel("ConfirmUI");
-                    var confirmCanvas = confirmPanel as ConfirmWindow;
-                    confirmCanvas.LoadConfirmWindow("是否关闭软件！", UIManager.Instance.Exit, null);
-                }
-                else
-                {
-                    var confirmPanel = UIManager.Instance.OpenPanel("ConfirmGUI");
-                    var confirmGUIWindow = confirmPanel as ConfirmWindowGUI;
-                    confirmGUIWindow.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
-                }
-
-                return;
-            }
-
-            if (UIManager.Instance.openPanelDic.TryGetValue(_sceneMenuName, out BasePanel menuPanel))
-            {
-                if (menuPanel.isShow)
-                    UIManager.Instance.ClosePanel(_sceneMenuName);
-                else
-                    UIManager.Instance.OpenPanel(_sceneMenuName);
+                var confirmPanel = UIManager.Instance.OpenPanel("ConfirmUI");
+                var confirmCanvas = confirmPanel as ConfirmWindow;
+                confirmCanvas.LoadConfirmWindow("是否关闭软件！", UIManager.Instance.Exit, null);
             }
             else
             {
-                UIManager.Instance.OpenPanel(_sceneMenuName);
+                var confirmPanel = UIManager.Instance.OpenPanel("ConfirmGUI");
+                var confirmGUIWindow = confirmPanel as ConfirmWindowGUI;
+                confirmGUIWindow.LoadConfirmWindowGUI("是否关闭软件！", UIManager.Instance.Exit, null);
             }
+
+            return;
+        }
+
+        if (UIManager.Instance.openPanelDic.TryGetValue(_sceneMenuName, out BasePanel menuPanel))
+        {
+            if (menuPanel.isShow)
+                UIManager.Instance.ClosePanel(_sceneMenuName);
+            else
+                UIManager.Instance.OpenPanel(_sceneMenuName);
+        }
+        else
+        {
+            UIManager.Instance.OpenPanel(_sceneMenuName);
         }
     }
 }

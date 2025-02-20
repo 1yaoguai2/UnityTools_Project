@@ -28,8 +28,7 @@ public class GetFPS : MonoBehaviour
 
     private void Update()
     {
-        #if ENABLE_INPUT_SYSTEM
-        #else
+        #if !ENABLE_INPUT_SYSTEM
         if (Input.GetKeyDown(KeyCode.F8)) show = !show;
         #endif
         if (!show) return;
@@ -59,4 +58,13 @@ public class GetFPS : MonoBehaviour
             rateNum = 120;
         }
     }
+    
+
+#if ENABLE_INPUT_SYSTEM
+    //隐藏帧率显示
+    public void ShowFPSControl(InputAction.CallbackContext obj)
+    {
+        show = !show;
+    }
+#endif
 }

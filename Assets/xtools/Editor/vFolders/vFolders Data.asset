@@ -24,6 +24,9 @@ MonoBehaviour:
     - 9b982921eb7825a4098462c94b21dcb4
     - 3c84ecd8fa2910045a3f9de10b1d859d
     - 14c2e05b1c6b9184398f81469413be13
+    - ad392f10782eb61439c2202344d8f6ff
+    - c9ef20c9feec0484d8b1154784b9537f
+    - 85d8114161a320442bf476e9b82e673c
     values:
     - iconNameOrGuid: 
       colorIndex: 2
@@ -38,7 +41,7 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 1
     - iconNameOrGuid: SceneAsset Icon
-      colorIndex: 0
+      colorIndex: 8
       isIconRecursive: 1
       isColorRecursive: 0
     - iconNameOrGuid: Font Icon
@@ -50,9 +53,9 @@ MonoBehaviour:
       isIconRecursive: 1
       isColorRecursive: 0
     - iconNameOrGuid: Prefab Icon
-      colorIndex: 0
+      colorIndex: 5
       isIconRecursive: 1
-      isColorRecursive: 0
+      isColorRecursive: 1
     - iconNameOrGuid: ScriptableObject Icon
       colorIndex: 0
       isIconRecursive: 1
@@ -65,4 +68,16 @@ MonoBehaviour:
       colorIndex: 9
       isIconRecursive: 0
       isColorRecursive: 1
+    - iconNameOrGuid: Mesh Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 2
+      isIconRecursive: 0
+      isColorRecursive: 1
+    - iconNameOrGuid: RawImage Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
   bookmarks: []
