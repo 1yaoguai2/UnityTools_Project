@@ -60,11 +60,9 @@ public class GetFPS : MonoBehaviour
     }
     
 
-#if ENABLE_INPUT_SYSTEM
     //隐藏帧率显示
-    public void ShowFPSControl(InputAction.CallbackContext obj)
+    public void ShowFPSControl()
     {
         show = !show;
     }
-#endif
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MainCameraController : MonoBehaviour
 {
+    #if !ENABLE_INPUT_SYSTEM
     //控制的摄像机
     private GameObject mainCamera;
     //是否控制移动
@@ -135,5 +136,5 @@ public class MainCameraController : MonoBehaviour
             transform.position = pos;
         }
     }
-
+    #endif
 }
