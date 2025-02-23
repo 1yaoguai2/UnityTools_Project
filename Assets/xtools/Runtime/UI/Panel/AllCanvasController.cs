@@ -67,7 +67,7 @@ public class AllCanvasController : MonoBehaviour
             UIManager.Instance.OpenPanel(baseGameUISo.name);
         }
 
-        Addressables.Release(handle);
+        //Addressables.Release(handle);
     }
 
     //关闭某些窗口

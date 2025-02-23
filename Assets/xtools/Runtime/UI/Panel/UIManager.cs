@@ -122,7 +122,7 @@ namespace XTools.UI
             basePanel = currentPanelObj.GetComponent<BasePanel>();
             openPanelDic.Add(panelName, basePanel);
             basePanel.OpenPanel(panelName);
-            Addressables.Release(handle);
+            //Addressables.Release(handle);
 
 
             return basePanel;

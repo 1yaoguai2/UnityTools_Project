@@ -1,3 +1,4 @@
+using InputSysteam;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -7,13 +8,13 @@ public class ClosePanelCR : MonoBehaviour
 {
 #if ENABLE_INPUT_SYSTEM
     private AllCanvasController _allCanvasController;
-    private PlayerInputController _inputController;
+    private InputControls _inputController;
 
     private void Awake()
     {
         _allCanvasController = GetComponent<AllCanvasController>();
-        _inputController = new PlayerInputController();
-        _inputController.Player.UICR.started += ClosePanel;
+        _inputController = new InputControls();
+        _inputController.Player.UI.started += ClosePanel;
     }
 
 

@@ -1,20 +1,21 @@
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
+using InputSysteam;
 using UnityEngine.InputSystem;
 #endif
 
 public class SetPFSShow : MonoBehaviour
 {
 #if ENABLE_INPUT_SYSTEM
-    private PlayerInputController _inputController;
+    private InputControls _inputController;
 
     private GetFPS _getFPS;
 
     private void Awake()
     {
         _getFPS = GetComponent<GetFPS>();
-        _inputController = new PlayerInputController();
-        _inputController.Player.UICR.started += ShowFPSCR;
+        _inputController = new InputControls();
+        _inputController.Player.UI.started += ShowFPSCR;
     }
 
 

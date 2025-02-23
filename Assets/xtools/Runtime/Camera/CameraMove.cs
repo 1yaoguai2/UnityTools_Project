@@ -2,7 +2,28 @@ using Cat.Animation;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CameraFollow { S100, S101, S102, S200, S201, S202, S300, S301, S302, S400, S401, S402, S1001, S1002, S1003, A601, A602, None }
+public enum CameraFollow
+{
+    S100,
+    S101,
+    S102,
+    S200,
+    S201,
+    S202,
+    S300,
+    S301,
+    S302,
+    S400,
+    S401,
+    S402,
+    S1001,
+    S1002,
+    S1003,
+    A601,
+    A602,
+    None
+}
+
 public class CameraMove : MonoBehaviour
 {
     private MainCameraController mainCameraController;
@@ -12,9 +33,9 @@ public class CameraMove : MonoBehaviour
     LineAnimation cameraAnim;
     private Transform cameraTra;
     public List<float> moveSpeed = new List<float>();
-    [SerializeField]
-    private float rotationSpeed = 0.1f;
+    [SerializeField] private float rotationSpeed = 0.1f;
     private CameraFollow follow = CameraFollow.None;
+
     public CameraFollow Follow
     {
         get => follow;
@@ -31,6 +52,7 @@ public class CameraMove : MonoBehaviour
     public CameraFollow cameraFollow = CameraFollow.None;
 
     public List<Transform> followObj = new List<Transform>();
+
     void Start()
     {
         isMove = false;
@@ -44,12 +66,12 @@ public class CameraMove : MonoBehaviour
         {
             isMove = true;
         }
+
         Follow = cameraFollow;
     }
 
     private void FixedUpdate()
     {
-
         if (isMove)
         {
             isMove = false;
@@ -58,6 +80,7 @@ public class CameraMove : MonoBehaviour
                 cameraTra.position = cameraPoint[i].position;
                 cameraTra.rotation = cameraPoint[i].rotation;
             }
+
             if (i < cameraPoint.Count - 1)
             {
                 i++;
@@ -73,7 +96,6 @@ public class CameraMove : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// 播放动画
     /// </summary>
@@ -84,17 +106,20 @@ public class CameraMove : MonoBehaviour
             cameraTra.position,
             cameraPoint[i].position,
             moveSpeed[i]
-            );
+        );
         cameraAnim.OnPlayUpdate += (_) =>
         {
             //cameraTra.Rotate(cameraPoint[i].eulerAngles, Space.Self);
-            cameraTra.rotation = Quaternion.Slerp(cameraTra.rotation, cameraPoint[i].rotation, rotationSpeed / moveSpeed[i] * Time.deltaTime);
+            cameraTra.rotation = Quaternion.Slerp(cameraTra.rotation, cameraPoint[i].rotation,
+                rotationSpeed / moveSpeed[i] * Time.deltaTime);
         };
         cameraAnim.OnPlayComplete += (_) =>
         {
             isMove = false;
             cameraAnim = null;
+#if !ENABLE_INPUT_SYSTEM
             mainCameraController.OldMousePos = Input.mousePosition;
+#endif
         };
         cameraTra.PlayAnimation(cameraAnim);
     }
@@ -110,10 +135,13 @@ public class CameraMove : MonoBehaviour
                 break;
             default:
                 string followName = follow.ToString().Substring(1);
-                trans =followObj.Find(t => t.name == followName);
+                trans = followObj.Find(t => t.name == followName);
                 break;
         }
+
         cameraTra.transform.parent = trans;
-        mainCameraController.OldMousePos = Input.mousePosition;
+#if !ENABLE_INPUT_SYSTEM
+            mainCameraController.OldMousePos = Input.mousePosition;
+#endif
     }
 }
