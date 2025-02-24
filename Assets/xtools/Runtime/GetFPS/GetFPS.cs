@@ -9,8 +9,7 @@ public class GetFPS : MonoBehaviour
     private int m_FrameUpdate = 0;//帧数;  
     private float m_FPS = 0;//帧率
 
-    [SerializeField]
-    private bool show;
+    public bool show;
     public Rate fpsRate = new Rate();
     public int rateNum;
 

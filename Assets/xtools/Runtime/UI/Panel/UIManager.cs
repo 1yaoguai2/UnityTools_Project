@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 
 namespace XTools.UI
@@ -27,7 +28,9 @@ namespace XTools.UI
         public Dictionary<string, GameUISO> gameUISODic;
         public Dictionary<string, AssetReference> prefabDic;
         public Dictionary<string, BasePanel> openPanelDic;
+        private Dictionary<string, AsyncOperationHandle<GameObject>> _handleDiC;
 
+        //场景菜单窗口名称
         public string sceneMenuName;
 
         //UI预制体挂载节点
@@ -51,6 +54,7 @@ namespace XTools.UI
         {
             prefabDic = new Dictionary<string, AssetReference>();
             openPanelDic = new Dictionary<string, BasePanel>();
+            _handleDiC = new Dictionary<string, AsyncOperationHandle<GameObject>>();
         }
 
         /// <summary>
@@ -122,12 +126,13 @@ namespace XTools.UI
             basePanel = currentPanelObj.GetComponent<BasePanel>();
             openPanelDic.Add(panelName, basePanel);
             basePanel.OpenPanel(panelName);
-            Addressables.Release(handle);
+            _handleDiC.Add(panelName,handle);
 
 
             return basePanel;
         }
 
+        //关闭窗口
         public bool ClosePanel(string panelName)
         {
             BasePanel currentPanel = null;
@@ -163,12 +168,17 @@ namespace XTools.UI
         //移除打开
         public void RemoveOpenPanel(string panelName)
         {
-            if (openPanelDic.TryGetValue(panelName, out BasePanel panel))
+            if (openPanelDic.TryGetValue(panelName, out var panel))
             {
                 openPanelDic.Remove(panelName);
             }
+            //资源释放
+            if (_handleDiC.TryGetValue(panelName, out var handle))
+            {
+                _handleDiC.Remove(panelName);
+                Addressables.Release(handle);
+            }
         }
-
 
         //退出
         public void Exit()
