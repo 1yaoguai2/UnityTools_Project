@@ -7,7 +7,7 @@ using Debug = UnityEngine.Debug;
 
 [CustomEditor(typeof(Readme))]
 [InitializeOnLoad]
-public class ReadmeEditor : Editor
+public class PreferenceEditor : Editor
 {
 
     static string kShowedReadmeSessionStateName = "ReadmeEditor.showedReadme";
@@ -16,8 +16,8 @@ public class ReadmeEditor : Editor
 
     private static readonly MethodInfo s_LoadWindowLayoutMethod;
     private static readonly MethodInfo s_SaveWindowLayoutMethod;
-    private static string assetPath = Application.dataPath + "/TutorialInfo/Editor/Layout.wlt";
-    static ReadmeEditor()
+    private static string assetPath = Application.dataPath + "/Preference/Editor/Layout.wlt";
+    static PreferenceEditor()
     {
         EditorApplication.delayCall += SelectReadmeAutomatically;
         EditorApplication.quitting += SaveReadme;
@@ -76,7 +76,7 @@ public class ReadmeEditor : Editor
     /// <summary>
     /// 保存Layout到资源文件
     /// </summary>
-    [MenuItem("Tutorial/Save Window Layout")]
+    [MenuItem("Preference/Save Window Layout")]
     public static void SaveLayoutToAsset()
     {
         if (s_SaveWindowLayoutMethod == null)
@@ -89,7 +89,7 @@ public class ReadmeEditor : Editor
     /// <summary>
     /// 加载.wlt文件
     /// </summary>
-    [MenuItem("Tutorial/Load Window Layout")]
+    [MenuItem("Preference/Load Window Layout")]
     public static void LoadLayoutFromAsset()
     {
 #if UNITY_2023_1_OR_NEWER
@@ -136,7 +136,7 @@ public class ReadmeEditor : Editor
     /// 选中Readme资产
     /// </summary>
     /// <returns></returns>
-    [MenuItem("Tutorial/Show Tutorial Instructions")]
+    [MenuItem("Preference/Show Tutorial Instructions")]
     static Readme SelectReadme()
     {
         var ids = AssetDatabase.FindAssets("Readme t:Readme");
@@ -159,7 +159,7 @@ public class ReadmeEditor : Editor
     /// 创建Readme资产
     /// </summary>
     /// <returns></returns>
-    [MenuItem("Tutorial/CreateReadmeFile")]
+    [MenuItem("Preference/CreateReadmeFile")]
     public static Readme CreateReadmeFile()
     {
         var ids = AssetDatabase.FindAssets("Readme t:Readme");
