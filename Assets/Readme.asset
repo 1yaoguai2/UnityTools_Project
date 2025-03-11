@@ -9,22 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Script: {fileID: 11500000, guid: e9033bbe23cb99447a1b30e6e27fe9c9, type: 3}
   m_Name: Readme
   m_EditorClassIdentifier: 
-  icon: {fileID: 10904, guid: 0000000000000000f000000000000000, type: 0}
-  title: "unity\u5DE5\u5177\u5305XTools"
+  icon: {fileID: 0}
+  title: "Unity \u5DE5\u5177\u5305"
   sections:
-  - heading: "xtools\u6587\u4EF6\u5939"
-    text: "\u5305\u542B\u4E86unity\u9879\u76EE\u57FA\u7840\u5E38\u7528\u4EE3\u7801\uFF0C\u53EF\u4EE5\u4F7F\u7528unity\u7684PackageManager\u5305\u901A\u8FC7URL\u5BFC\u5165"
+  - heading: "\u4F7F\u7528\u65B9\u6CD5"
+    text: "\u901A\u8FC7UnityPackage\u6DFB\u52A0"
     linkText: "Git\u5730\u5740"
     url: https://github.com/1yaoguai2/XTools.git
-  - heading: "Package\u6587\u4EF6\u5939"
-    text: "\u5305\u542B\u4E86unity\u9879\u76EE\u57FA\u7840\u5E38\u7528\u4EE3\u7801\u7684\u5BFC\u51FA\u5305"
-    linkText: "\u53EF\u4EE5\u5BFC\u5165unity\u9879\u76EE\u4F7F\u7528\u548C\u7F16\u8F91\u4FEE\u6539"
-    url: 
-  - heading: "\u6CE8\u610F\u4E8B\u9879"
-    text: "1.\u8BE5\u5305\u4F7F\u7528Unity2022.2.20\u5F00\u53D1\uFF0C\u7406\u8BBA\u4E0A\u652F\u6301\u5230unity2023\u7248\u672C"
-    linkText: 
-    url: 
-  computerID: b18a13b6578f9e34537bf2656e73a6d23e83b770
+  computerID: 
