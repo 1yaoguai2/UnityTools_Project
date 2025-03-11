@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace XTools
 {
-//[CreateAssetMenu(fileName ="Readme",menuName = "CreateScriptableObject/ReadmeSO")]
-	public class Readme : ScriptableObject
+//[CreateAssetMenu(fileName ="PreferenceReadme",menuName = "CreateScriptableObject/PreferenceReadmeSO")]
+	public class ReadmeScriptableObject : ScriptableObject
 	{
 		public Texture2D icon;
 		public string title;

@@ -38,3 +38,8 @@ Unity小技巧 如何使用AssemlyDefinition划分多个程序集 减少编译�
 
 [Unity小技巧 如何使用AssemlyDefinition划分多个程序集 减少编译时间_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Ud4y1w7zC/?spm_id_from=333.1387.favlist.content.click&vd_source=a08df359422d16d82a30f019bf9ebb8c)
 
+
+
+# 注意事项
+
+1. 需要.meta文件，注意GUID冲突问题

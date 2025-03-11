@@ -7,12 +7,12 @@ using Debug = UnityEngine.Debug;
 
 namespace XTools
 {
-    [CustomEditor(typeof(Readme))]
+    [CustomEditor(typeof(ReadmeScriptableObject))]
     [InitializeOnLoad]
-    public class PreferenceEditor : Editor
+    public class PreferenceFileEditor : Editor
     {
 
-        static string kShowedReadmeSessionStateName = "ReadmeEditor.showedReadme";
+        static string kShowedReadmeSessionStateName = "ReadmeScriptableObject.showedReadme";
 
         static float kSpace = 16f;
 
@@ -20,7 +20,7 @@ namespace XTools
         private static readonly MethodInfo s_SaveWindowLayoutMethod;
         private static string assetPath = Application.dataPath + "/Preference/Editor/Layout.wlt";
 
-        static PreferenceEditor()
+        static PreferenceFileEditor()
         {
             EditorApplication.delayCall += SelectReadmeAutomatically;
             EditorApplication.quitting += SaveReadme;
@@ -79,7 +79,7 @@ namespace XTools
         /// <summary>
         /// 保存Layout到资源文件
         /// </summary>
-        [MenuItem("Preference/Save Window Layout")]
+        [MenuItem("Tools/Preference/Save Window Layout")]
         public static void SaveLayoutToAsset()
         {
             if (s_SaveWindowLayoutMethod == null)
@@ -92,7 +92,7 @@ namespace XTools
         /// <summary>
         /// 加载.wlt文件
         /// </summary>
-        [MenuItem("Preference/Load Window Layout")]
+        [MenuItem("Tools/Preference/Load Window Layout")]
         public static void LoadLayoutFromAsset()
         {
 #if UNITY_2023_1_OR_NEWER
@@ -140,21 +140,21 @@ namespace XTools
         /// 选中Readme资产
         /// </summary>
         /// <returns></returns>
-        [MenuItem("Preference/Show Tutorial Instructions")]
-        static Readme SelectReadme()
+        [MenuItem("Tools/Preference/Show Tutorial Instructions")]
+        static ReadmeScriptableObject SelectReadme()
         {
-            var ids = AssetDatabase.FindAssets("Readme t:Readme");
+            var ids = AssetDatabase.FindAssets("Readme t:ReadmeScriptableObject");
             if (ids.Length == 1)
             {
                 var readmeObject = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(ids[0]));
 
                 Selection.objects = new UnityEngine.Object[] { readmeObject };
 
-                return (Readme)readmeObject;
+                return (ReadmeScriptableObject)readmeObject;
             }
             else
             {
-                Debug.Log("Couldn't find a readme");
+                Debug.Log("Couldn't find a ReadmeScriptableObject");
                 return null;
             }
         }
@@ -163,22 +163,22 @@ namespace XTools
         /// 创建Readme资产
         /// </summary>
         /// <returns></returns>
-        [MenuItem("Preference/CreateReadmeFile")]
-        public static Readme CreateReadmeFile()
+        [MenuItem("Tools/Preference/CreateReadmeFile")]
+        public static ReadmeScriptableObject CreateReadmeFile()
         {
-            var ids = AssetDatabase.FindAssets("Readme t:Readme");
+            var ids = AssetDatabase.FindAssets("Readme t:ReadmeScriptableObject");
             if (ids.Length == 1)
             {
                 var readmeObject = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(ids[0]));
 
                 Selection.objects = new UnityEngine.Object[] { readmeObject };
                 Debug.LogError("Readme,已经存在");
-                return (Readme)readmeObject;
+                return (ReadmeScriptableObject)readmeObject;
             }
             else
             {
-                Readme file = CreateInstance<Readme>();
-                file.sections = new Readme.Section[0];
+                ReadmeScriptableObject file = CreateInstance<ReadmeScriptableObject>();
+                file.sections = new ReadmeScriptableObject.Section[0];
                 AssetDatabase.CreateAsset(file, "Assets/Readme.asset");
                 AssetDatabase.Refresh();
                 return file;
@@ -188,7 +188,7 @@ namespace XTools
 
         protected override void OnHeaderGUI()
         {
-            var readme = (Readme)target;
+            var readme = (ReadmeScriptableObject)target;
             Init();
 
             var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f);
@@ -203,7 +203,7 @@ namespace XTools
 
         public override void OnInspectorGUI()
         {
-            var readme = (Readme)target;
+            var readme = (ReadmeScriptableObject)target;
             Init();
 
             foreach (var section in readme.sections)
