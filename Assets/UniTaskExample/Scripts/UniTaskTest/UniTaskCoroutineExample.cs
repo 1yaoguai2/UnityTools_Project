@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Threading;
 using System.Collections;
+using UnityEngine.UI;
 
 
 /// <summary>
@@ -237,4 +238,34 @@ public class UniTaskCoroutineExample : MonoBehaviour
         //关闭所有正在执行的协程
         StopAllCoroutines();
     }
+
+
+    #region 协程内部调用UniTask
+
+    private Text _idText;
+    private IEnumerator UpdateUiText()
+    {
+        int index = 0;
+        while (true)
+        {
+            var task = GetIntAsync();
+            yield return task.ToCoroutine(result =>
+            {
+                index = result;
+            });
+            //跟新UI
+            _idText.text = index.ToString();
+            yield return new WaitForSeconds(10f);
+        }
+    }
+    
+
+    private async UniTask<int> GetIntAsync()
+    {
+        await UniTask.DelayFrame(10);  //延迟10帧
+        await UniTask.Yield();  //一帧后切回主线程
+        return 10;
+    }
+
+    #endregion
 }

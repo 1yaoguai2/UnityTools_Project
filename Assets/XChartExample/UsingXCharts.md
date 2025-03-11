@@ -11,7 +11,7 @@
 2. Unity导入
 
 ```
-https://github.com/XCharts-Team/XCharts.git
+https://github.com/XCharts-Team/XCharts.git#3.0
 ```
 
 3. 创建图标
@@ -38,14 +38,14 @@ https://github.com/XCharts-Team/XCharts.git
 
    3. Serie 0：Line
 
-      ````
+      ```
       Line Type --线类型
       Symbol --顶点符号
       Line Style --线样式
-      Data --数据
-      ````
+      Data --数据          
+      ```
 
-5. 特殊操作
+3. 特殊操作
 
    1. 折线图顶点数据显示
 
@@ -63,7 +63,15 @@ https://github.com/XCharts-Team/XCharts.git
 
       Series0：Pie Rose Type -> Radius
 
-6. 相关代码
+   5. 柱状图多种类型的数据在一张表
+
+      新增多个Serie，忽略Serie 1-N的不需要的数据，修改每个Serie的BarGap为-1，使数据居中
+
+   6. 新增数据样式颜色标识
+
+      AddMainComponent -> Legend
+
+4. 相关代码
 
    ```
    //初始化
