@@ -45,7 +45,7 @@ https://github.com/XCharts-Team/XCharts.git#3.0
       Data --数据          
       ```
 
-3. 特殊操作
+5. 特殊操作
 
    1. 折线图顶点数据显示
 
@@ -70,6 +70,10 @@ https://github.com/XCharts-Team/XCharts.git#3.0
    6. 新增数据样式颜色标识
 
       AddMainComponent -> Legend
+
+   7. 折线图数据顶头显示
+
+      XAxis,取消勾选Boundary Gap
 
 4. 相关代码
 
