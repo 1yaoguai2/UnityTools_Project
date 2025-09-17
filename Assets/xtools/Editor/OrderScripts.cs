@@ -16,17 +16,15 @@ namespace XTools.EditorTools
     /// </summary>
     public class Order : MonoBehaviour
     {
-        [MenuItem("Tools/排序物体")]
+        [MenuItem("Tools/对象操作/排序物体")]
         public static void OrderChild()
         {
             try
             {
                 var selectObjs = Selection.gameObjects;
                 if (selectObjs.Length == 0)
-                {
                     throw new Exception("至少选中一个物体！");
-                }
-                else if (selectObjs.Length == 1)
+                if (selectObjs.Length == 1)
                 {
                     var childs = new Transform[selectObjs[0].transform.childCount];
                     for (int i = 0; i < selectObjs[0].transform.childCount; i++)
@@ -38,7 +36,7 @@ namespace XTools.EditorTools
                     //纯数字排序
                     //var newChilds = childs.OrderBy(t => int.Parse(t.name)).ToList();
                     //排除字母留下编号排序
-                    var newChilds = childs.OrderBy(t => int.Parse(t.name.Substring(index,t.name.Length -index))).ToList();
+                    var newChilds = childs.OrderBy(t => int.Parse(t.name.Substring(index, t.name.Length - index))).ToList();
                     List<string> orderStr = new List<string>();
                     for (int j = 0; j < newChilds.Count; j++)
                     {
@@ -49,17 +47,6 @@ namespace XTools.EditorTools
                         else
                             orderStr.Add(childName);
                         //错误想法 循环判断当前对象与下一个对象的大小，将大的往后移动，之后再判断与下下个的大小关系
-                        //bool orderB = int.Parse(childs[j].name) > int.Parse(childs[j + 1].name);
-                        //int currentIndex = j;
-                        //while (orderB)
-                        //{
-                        //    childs[currentIndex].SetSiblingIndex(currentIndex + 2);
-                        //    currentIndex++;
-                        //    if (currentIndex < childs.Length)
-                        //    {
-                        //        orderB = int.Parse(childs[currentIndex].name) > int.Parse(childs[currentIndex + 1].name);
-                        //    }
-                        //}
                         newChilds[j].SetSiblingIndex(j);
                     }
                 }
@@ -67,8 +54,7 @@ namespace XTools.EditorTools
                 {
                     List<string> orderStr = new List<string>();
                     int index = GetNumIndex(selectObjs[0].name);
-                    var newSelectObjs = selectObjs.OrderBy(t => int.Parse(t.name.Substring(index,t.name.Length-index)))
-                        .ToList();
+                    var newSelectObjs = selectObjs.OrderBy(t => int.Parse(t.name.Substring(index, t.name.Length - index))).ToList();
                     for (int k = 0; k < newSelectObjs.Count; k++)
                     {
                         string childName = newSelectObjs[k].name;
@@ -83,7 +69,7 @@ namespace XTools.EditorTools
             }
             catch (Exception e)
             {
-                EditorUtility.DisplayDialog("排序物体",e.Message,"确定");
+                EditorUtility.DisplayDialog("排序物体", e.Message, "确定");
                 Debug.LogError("排序出错：" + e.Message);
             }
         }
@@ -100,7 +86,7 @@ namespace XTools.EditorTools
             for (int i = 0; i < nameStr.Length; i++)
             {
                 string inStr = nameStr.Substring(i, 1);
-                if(int.TryParse(inStr,out int num))
+                if (int.TryParse(inStr, out int num))
                 {
                     index = i;
                     break;

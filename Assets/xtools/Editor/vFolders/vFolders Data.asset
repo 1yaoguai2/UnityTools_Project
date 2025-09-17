@@ -27,6 +27,7 @@ MonoBehaviour:
     - ad392f10782eb61439c2202344d8f6ff
     - c9ef20c9feec0484d8b1154784b9537f
     - 85d8114161a320442bf476e9b82e673c
+    - 2f3d4b9695da6ad45b551c8f4c060556
     values:
     - iconNameOrGuid: 
       colorIndex: 2
@@ -77,6 +78,10 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 1
     - iconNameOrGuid: RawImage Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: LookAtConstraint Icon
       colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0

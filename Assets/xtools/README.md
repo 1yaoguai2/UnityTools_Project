@@ -38,6 +38,7 @@ Unity小技巧 如何使用AssemlyDefinition划分多个程序集 减少编译�
 
 [Unity小技巧 如何使用AssemlyDefinition划分多个程序集 减少编译时间_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Ud4y1w7zC/?spm_id_from=333.1387.favlist.content.click&vd_source=a08df359422d16d82a30f019bf9ebb8c)
 
+Unity划分程序集后，Editor相关程序集，需要设置为仅在Editor下使用，防止打包失败。
 
 
 # 注意事项
