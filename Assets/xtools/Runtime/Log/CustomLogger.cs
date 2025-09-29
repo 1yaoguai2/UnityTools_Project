@@ -20,7 +20,7 @@ public static class CustomLogger
     private static readonly StringBuilder s_StringBuilder = new StringBuilder(BUFFER_SIZE);
     private static string LogFilePath;    // 当前日志文件路径
     private static readonly object LogLock = new object();  // 线程同步锁
-    private static readonly string LogDirectory = Path.Combine(Application.streamingAssetsPath, "Logs");
+    private static readonly string LogDirectory = Path.Combine(Application.dataPath, "Logs");
     private static Queue<string> LogQueue = new Queue<string>(INITIAL_QUEUE_CAPACITY);
     private static string timestamp;
     private static string logMessage;
@@ -211,6 +211,14 @@ public static class CustomLogger
     /// 记录普通日志
     /// </summary>
     public static void Log(string message, Object context = null)
+    {
+        LogWithContext(message, context, LogType.Log);
+    }
+    
+    /// <summary>
+    /// 记录普通日志
+    /// </summary>
+    public static void LogInfo(string message, Object context = null)
     {
         LogWithContext(message, context, LogType.Log);
     }

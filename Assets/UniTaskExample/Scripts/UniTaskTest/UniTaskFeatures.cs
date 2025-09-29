@@ -81,7 +81,7 @@ public class UniTaskFeatures : MonoBehaviour
             //}
             while (true)
             {
-                CustomLogger.Log("每秒执行一次的无限循环");
+                CustomLogger.Log($"每秒执行一次的无限循环，当前线程ID{Thread.CurrentThread.ManagedThreadId}");
                 await UniTask.Delay(1000, cancellationToken:ctsToken);
             }
         }

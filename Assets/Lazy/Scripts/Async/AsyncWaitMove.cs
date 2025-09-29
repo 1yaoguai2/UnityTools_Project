@@ -15,13 +15,13 @@ public class AsyncWaitMove : MonoBehaviour
 
     private async void Start()
     {
-        CustomLogger.Log("异步场景开始！");
+        CustomLogger.Log($"异步场景开始！{Time.frameCount}");
         Move move = new Move();
         await move.AsyncMove(transform);
-        CustomLogger.Log("等待移动完成！");
-        CustomLogger.Log("另一次移动");
+        CustomLogger.Log($"第一次移动完成！{Time.frameCount}");
+        CustomLogger.Log($"开始另一次移动{Time.frameCount}");
         await AsyncMove();
-        CustomLogger.Log("等待另一次移动完成！");
+        CustomLogger.Log($"另一次移动完成！{Time.frameCount}");
     }
 
     /// <summary>

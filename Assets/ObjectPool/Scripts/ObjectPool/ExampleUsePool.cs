@@ -35,6 +35,7 @@ public class ExampleUsePool : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
+            if(objects.Count == 0) return;
             objects[0].SetActive(false);
             objects.RemoveAt(0);
         }
